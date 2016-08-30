@@ -1,0 +1,318 @@
+<style type="text/css">
+<!--
+	.modal-dialog {
+    width:60%;
+	}
+	.modal-header{
+		height: 60px;
+	}
+	textarea{ resize:none;}
+}
+-->
+</style>
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">添加应用</h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+	<div class="col-xs-12">
+		<form class="form-horizontal" id="add-apply-from" role="form" >
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right">应用名</label>
+					<div class="col-sm-10">
+						<input type="text"  name="apply.appname"
+							value="" placeholder="" class="form-control input-large">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right">版本号</label>
+					<div class="col-sm-10">
+						<input type="text"  name="apply.appversion"
+							value=""  class="form-control input-small">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right">图标</label>
+					<div class="col-sm-10">
+						 <div id="upload-container" class="btn btn-sm btn-primary"></div>
+						 <img id="showload" src="resources/images/loading.gif" style="display: none">
+						 <input type="text" name="apply.imgurl" id="cover"  class="col-xs-7" readonly>
+						 <p id="prev" style="display: none">
+                			 <img src="" width="120px" height="100px" />
+                			 <a style="cursor:pointer;">删除</a>
+           				  </p>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right">文件</label>
+					<div class="col-sm-10">
+						 <div id="upload-container2" class="btn btn-sm btn-primary"></div>
+			              <img id="showload2" src="resources/images/loading.gif" style="display: none">
+			               <span class="red">*上传(apk)格式文件</span>
+						 <input type="text" name="apply.fileurl" id="cover2"  class="col-xs-7" readonly>
+						 <input type="hidden" name="apply.appsize" id="appsize"/>
+					</div>
+				</div>
+<!-- 				<div class="form-group"> -->
+<!-- 					<label class="col-sm-2 control-label no-padding-right">APK文件名称</label> -->
+<!-- 					<div class="col-sm-10"> -->
+<!-- 						<input type="text"  name="apply.applicationname" -->
+<!-- 							value="" placeholder="" class="form-control input-large"> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right">描述</label>
+					<div class="col-sm-10">
+						<textarea rows="6" cols="30" id="appdescription" name="apply.appdescription" ></textarea>
+					</div>
+				</div>
+				
+<div class="modal-footer">
+	<button data-dismiss="modal" class="btn btn-sm pull-left">
+		<i class="ace-icon fa fa-times"></i> 取消
+	</button>
+	<button type="reset" class="btn btn-sm btn-warning" id="clear_btn"><i class="ace-icon fa fa-undo"></i>重置</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button type="submit"
+		class="btn btn-sm btn-primary">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+</div>
+				
+	</form>
+	</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+jQuery.validator.addMethod("isFloat", function(value, element) {       
+    return this.optional(element) || /^[-\+]?\d+(\.\d+)?$/.test(value);       
+}, "只能是整数或小数 "); 
+	
+	$(document).ready(function() {
+		
+		 // validate signup form on keyup and submit
+			$("#add-apply-from").validate({
+				rules: {
+					"apply.appname" : {
+						required : true,
+						maxlength : 30
+					},
+					"apply.appversion" : {
+						required : true,
+						maxlength : 30,
+						isFloat : true
+					},
+					"apply.imgurl": "required",
+					"apply.fileurl": "required",
+					"apply.applicationname" : {
+						required : true,
+						maxlength : 30
+					},
+					"apply.appdescription" : {
+						required : true,
+						maxlength : 200
+					}
+					
+				},
+				messages: {
+					"apply.appname" : {
+						required : "请输入应用名称 !",
+						maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+					},
+					"apply.appversion" : {
+						required : "请输入应用版本 !",
+						maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+					},
+					"apply.imgurl" : "请上传图片!",
+					"apply.fileurl" : "请上传文件!",
+					"apply.applicationname" : {
+						required : "请输入APK文件名称 !",
+						maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+					},
+					"apply.appdescription" : {
+						required : "请输入应用描述 !",
+						maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+					}
+					
+				},
+				submitHandler : function(form) { //通过之后回调 
+					var param = $("#add-apply-from").serialize();
+					$.ajax({
+						url : "apply/addApply",
+						type : "post",
+						dataType : "json",
+						data : param,
+						success : function(data) {
+							if(data.status == "1"){
+								window.location.href="${CPATH}/apply";
+							}else{
+							}
+
+						}
+					});
+				},
+				invalidHandler : function(form, validator) { //不通过回调 
+					return false;
+				}
+			});
+		 
+			
+	});
+	
+
+	
+$(document).ready(function(){
+	
+	var apiUrl = '';
+
+	 if ($('#cover').val())
+	    {
+	        $('#cover').focus();
+	        var url = "${(uploadPath!"")}" + $('#cover').val();
+	    }
+	 if ($('#cover2').val())
+	    {
+	        $('#cover2').focus();
+	        var url = "${(uploadPath!"")}" + $('#cover2').val();
+	    }
+
+	 /**
+	     * 上传控件
+	     */
+	    var uploader = new qq.FileUploader({
+	        element: $('#upload-container')[0],
+	        action: 'site/loadFileImage',
+	        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+	        sizeLimit: 1024*1024*20,
+	        params: {
+	        },
+	        onSubmit: function(id, fileName)
+	        {
+	            $('#showload').show();
+	            return true;
+	        },
+	        onComplete: function(id, fileName, responseJSON)
+	        {
+	            setTimeout(function(){
+	                $('#showload').hide();
+	            }, 1000);
+
+	            if (responseJSON.error != undefined)
+	            {
+	                return false;
+	            }
+
+	            setTimeout(function(){
+	                $('#cover').val(responseJSON.fileId);  //改
+	                
+	                $('#prev').find('img').attr('src', '${(uploadPath!"")}' + responseJSON.fileId).end().show();
+	            }, 1000);
+	            $('#cover-error').remove();
+	            return true;
+	        },
+	        showMessage: function(message)
+	        {
+	            doAlert(message);
+	        }
+	    });
+
+
+	    /**
+	     * 删除预览图
+	     */
+	    $('#prev a').bind('click', function(){
+	        var url = $('#cover').val();
+	        if (!url)
+	        {
+	            return false;
+	        }
+
+	        /* 删除网络图片 */
+	        if (url.indexOf('http') === 0)
+	        {
+	            $('#cover').val('');
+	            $('#prev').hide();
+	        }
+
+	        /* 删除本地图片 */
+	        else
+	        {
+	        	bootbox.confirm('您确定要删除图片吗？', function(res){
+	        		if(res == true){
+	        			 $.ajax({
+	                      url: 'site/deletePicture',
+	                      data: 'type=100&path=' + url,
+	                      success: function(data){
+	                          if (data == 0)
+	                          {
+	                              $('#cover').val('');
+	                              $('#prev').hide();
+	                          }
+	                          else
+	                          {
+	                              alert('删除图片失败。');
+	                          }
+	                      }
+	                  });
+	        		}
+	            });
+	        }
+
+	        return false;
+	    });
+
+	    /**
+	     * 图片加载失败
+	     */
+	    $('#prev img').onerror = function()
+	    {
+	        $('#prev img').attr('src', 'resources/images/404.jpg')
+	    }
+	
+    /**
+     * 上传控件
+     */
+    var uploader2 = new qq.FileUploader({
+        element: $('#upload-container2')[0],
+        action: 'site/loadFileImage',
+        allowedExtensions: ['apk'],
+        sizeLimit: 1024*1024*1000,
+        params: {
+        },
+        onSubmit: function(id, fileName)
+        {
+            $('#showload2').show();
+            return true;
+        },
+        onComplete: function(id, fileName, responseJSON)
+        {
+            setTimeout(function(){
+                $('#showload2').hide();
+            }, 1000);
+
+            if (responseJSON.error != undefined)
+            {
+                return false;
+            }
+
+            setTimeout(function(){
+                $('#cover2').val(responseJSON.fileId);  //改
+                $('#appsize').val(responseJSON.filesize);
+            }, 1000);
+            $('#cover2-error').remove();
+            return true;
+        },
+        showMessage: function(message)
+        {
+            doAlert(message);
+        }
+    });
+    
+    
+
+});
+</script>

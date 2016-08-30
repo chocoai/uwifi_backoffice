@@ -1,0 +1,585 @@
+<#include "/admin/layout/layout_shop.html" /> 
+<@layout>
+<style>
+<!--
+-->
+</style>
+<!-- Page Head -->
+
+<div class="page-header">
+	<h1>
+	  <p>
+		 认证方式
+	   </p>
+	</h1>
+</div>
+<div class="modal-body">
+	<div class="row">
+	<div class="col-xs-12">
+	<form class="form-horizontal" role="form" id="authStyle" action="templetManage/authStyle" method="post">
+		<input type="hidden" name="acid" value="${(acid!'')}" />
+		<input type="hidden" name="businessid" value="${(businessid!'')}"/>
+		<input type="hidden" id="authtypeId" value="${(acauth.authtype)!''}">
+		<input type="hidden" id="afterauth" name="afterauth" value="${(acauth.afterauth)!''}">
+		<input type="hidden" id="protalurlId" <#if acauth?? && acauth.afterauth == 2> value="${(acauth.portalurl)!''}" <#else> value="" </#if> >
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right"> 选择认证方式 </label>
+			<div class="col-sm-8">
+				<#if acauth?? && acauth.authtype == 0>
+				<div class="radio">
+					<label>
+						<input id="onekey" name="acauth.authtype" type="radio" class="ace" value="0" checked="checked"/>
+						<span class="lbl">一键上网</span>
+					</label>
+					<label>
+						<input id="authduanxin" name="acauth.authtype" type="radio" class="ace" value="1"/>
+						<span class="lbl">手机短信认证</span>
+					</label>
+					<label>
+						<input id="authweixin" name="acauth.authtype" type="radio" class="ace" value="2"/>
+						<span class="lbl">微信认证</span>
+					</label>
+					<label>
+						<input id="authmix" name="acauth.authtype" type="radio" class="ace" value="3"/>
+						<span class="lbl">多种方式认证</span>
+					</label>
+				</div>
+				<#elseif acauth?? && acauth.authtype == 1>
+				<div class="radio">
+					<label>
+						<input id="onekey" name="acauth.authtype" type="radio" class="ace" value="0"/>
+						<span class="lbl">一键上网</span>
+					</label>
+					<label>
+						<input id="authduanxin" name="acauth.authtype" type="radio" class="ace" value="1" checked="checked"/>
+						<span class="lbl">手机短信认证</span>
+					</label>
+					<label>
+						<input id="authweixin" name="acauth.authtype" type="radio" class="ace" value="2"/>
+						<span class="lbl">微信认证</span>
+					</label>
+					<label>
+						<input id="authmix" name="acauth.authtype" type="radio" class="ace" value="3"/>
+						<span class="lbl">多种方式认证</span>
+					</label>
+				</div>
+				<#elseif acauth?? && acauth.authtype ==2>
+				<div class="radio">
+					<label>
+						<input id="onekey" name="acauth.authtype" type="radio" class="ace" value="0"/>
+						<span class="lbl">一键上网</span>
+					</label>
+					<label>
+						<input id="authduanxin" name="acauth.authtype" type="radio" class="ace" value="1"/>
+						<span class="lbl">手机短信认证</span>
+					</label>
+					<label>
+						<input id="authweixin" name="acauth.authtype" type="radio" class="ace" value="2" checked="checked"/>
+						<span class="lbl">微信认证</span>
+					</label>
+					<label>
+						<input id="authmix" name="acauth.authtype" type="radio" class="ace" value="3" />
+						<span class="lbl">多种方式认证</span>
+					</label>
+				</div>
+				<#elseif acauth?? && acauth.authtype == 3>
+				<div class="radio">
+					<label>
+						<input id="onekey" name="acauth.authtype" type="radio" class="ace" value="0"/>
+						<span class="lbl">一键上网</span>
+					</label>
+					<label>
+						<input id="authduanxin" name="acauth.authtype" type="radio" class="ace" value="1"/>
+						<span class="lbl">手机短信认证</span>
+					</label>
+					<label>
+						<input id="authweixin" name="acauth.authtype" type="radio" class="ace" value="2"/>
+						<span class="lbl">微信认证</span>
+					</label>
+					<label>
+						<input id="authmix" name="acauth.authtype" type="radio" class="ace" value="3" checked="checked"/>
+						<span class="lbl">多种方式认证</span>
+					</label>
+				</div>
+				<#else>
+				<div class="radio">
+					<label>
+						<input id="onekey" name="acauth.authtype" type="radio" class="ace" value="0" checked="checked"/>
+						<span class="lbl">一键上网</span>
+					</label>
+					<label>
+						<input id="authduanxin" name="acauth.authtype" type="radio" class="ace" value="1"/>
+						<span class="lbl">手机短信认证</span>
+					</label>
+					<label>
+						<input id="authweixin" name="acauth.authtype" type="radio" class="ace" value="2"/>
+						<span class="lbl">微信认证</span>
+					</label>
+					<label>
+						<input id="authmix" name="acauth.authtype" type="radio" class="ace" value="3"/>
+						<span class="lbl">多种方式认证</span>
+					</label>
+				</div>
+				</#if>
+								
+			</div>
+		</div>
+		<div class="form-group duanxin">
+			<label class="col-sm-2 control-label no-padding-right" >选择短信模板</label>
+			<div class="col-sm-6">
+				<select class="form-control input-large" onchange="changeSmstemplet()" id="smsId" name="smsid">
+			  	  	<#list authsmslist as x>
+			  	 	<#if smsacconfig?? && smsacconfig.smsid == x.id>
+					<option selected="selected" value="${(x.id!'')}" >${(x.templename!"")}</option>
+					<#else>
+					<option value="${(x.id!'')}" >${(x.templename!"")}</option>
+					</#if>
+				    </#list>
+		  	   </select>
+			</div>
+		</div>	
+		
+		<div class="form-group duanxin">
+			<label class="col-sm-2 control-label no-padding-right" >模板内容</label>
+			<div class="col-sm-6">
+				<div id="templecontent" >${(authsmstemple.templecontent)!''}</div>
+			</div>
+		</div>
+		
+		<div class="form-group multiauth">
+			<label class="col-sm-2 control-label no-padding-right" >员工上网密码</label>
+			<div class="col-sm-6">
+				<input class="input-xlarge" type="text" name="multiauthconfig.employeepwd" value="${(multiauthconfig.employeepwd)!''}" />&nbsp;备注：PC使用设备进行上网请设置
+			</div>
+		</div>
+		
+		<div class="form-group weixin">
+			<label class="col-sm-2 control-label no-padding-right">微信号</label>
+			<div class="col-sm-6">
+				<input  class="input-xlarge" id="weixinno" type="text" name="authweixinconfig.weixinno" maxlength="30px" value="${(authweixinconfig.weixinno)!''}"/>
+				<span >*请输入你想让客户关心的微信号</span>
+			</div>
+		</div>	
+		
+		<div class="form-group weixin">
+			<label class="col-sm-2 control-label no-padding-right">微信名称</label>
+			<div class="col-sm-6">
+				<input  class="input-xlarge" type="text" name="authweixinconfig.weixinname" maxlength="30px" value="${(authweixinconfig.weixinname)!''}" />
+				<span >*请输入你想让客户关心的微信名称</span>
+			</div>
+		</div>
+		
+		<div class="form-group multiauth">
+			<label class="col-sm-2 control-label no-padding-right">免费使用时间</label>
+			<div class="col-sm-6">
+				<input class="input-mini" type="text" name="multiauthconfig.freetime" maxlength="3" value="${(multiauthconfig.freetime)!'5'}" />
+				<span>分钟   &nbsp;备注：不认证时可使用的上网时长</span>
+			</div>
+		</div>
+		
+		<div class="form-group multiauth">
+			<label class="col-sm-2 control-label no-padding-right">提示文本标题</label>
+			<div class="col-sm-6">
+				<input  class="col-xs-10 col-sm-8" type="text" name="multiauthconfig.tiptitle" size="3" value="${(multiauthconfig.tiptitle)!''}" />
+			</div>
+		</div>
+		
+		<div class="form-group multiauth">
+			<label class="col-sm-2 control-label no-padding-right">操作</label>
+			<div class="col-sm-6">
+				<a class="btn btn-info btn-xs" id="btnAddOption" name="btnAddOption"  >
+					 添加文本内容</a>
+			</div>
+		</div>
+		
+		<#if (multiauthconfig.tipcontent1) ??>
+		<div class="form-group after_tr">
+			<label class="col-sm-2 control-label no-padding-right">提示文本内容</label>
+			<div class="col-sm-6">
+				<input class="col-xs-10 col-sm-8" name="tipcontent" value="${(multiauthconfig.tipcontent1)!''}" id="delTxt1" type="text">&nbsp;<button style="margin-top:3px;" id="del01" type="button" class="btn btn-xs btn-yellow">删除</button>
+			</div>
+		</div>
+		</#if>
+		<#if (multiauthconfig.tipcontent2) ??>
+		<div class="form-group after_tr">
+			<label class="col-sm-2 control-label no-padding-right">提示文本内容</label>
+			<div class="col-sm-6">
+				<input class="col-xs-10 col-sm-8" name="tipcontent" value="${(multiauthconfig.tipcontent2)!''}" id="delTxt2" type="text">&nbsp;<button style="margin-top:3px;" id="del02" type="button" class="btn btn-xs btn-yellow">删除</button>
+			</div>
+		</div>
+   		</#if>
+   		<#if (multiauthconfig.tipcontent3) ??>
+   		<div class="form-group after_tr">
+			<label class="col-sm-2 control-label no-padding-right">提示文本内容</label>
+			<div class="col-sm-6">
+				<input class="col-xs-10 col-sm-8" name="tipcontent" value="${(multiauthconfig.tipcontent3)!''}" id="delTxt3" type="text">&nbsp;<button style="margin-top:3px;" id="del03" type="button" class="btn btn-xs btn-yellow">删除</button>
+			</div>
+		</div>
+   		</#if>
+   		<#if (multiauthconfig.tipcontent4) ??>
+   		<div class="form-group after_tr">
+			<label class="col-sm-2 control-label no-padding-right">提示文本内容</label>
+			<div class="col-sm-6">
+				<input class="col-xs-10 col-sm-8" name="tipcontent" value="${(multiauthconfig.tipcontent4)!''}" id="delTxt4" type="text">&nbsp;<button style="margin-top:3px;" id="del04" type="button" class="btn btn-xs btn-yellow">删除</button>
+			</div>
+		</div>
+   		</#if>
+   		<#if (multiauthconfig.tipcontent5) ??>
+   		<div class="form-group after_tr">
+			<label class="col-sm-2 control-label no-padding-right">提示文本内容</label>
+			<div class="col-sm-6">
+				<input class="col-xs-10 col-sm-8" name="tipcontent" value="${(multiauthconfig.tipcontent5)!''}" id="delTxt5" type="text">&nbsp;<button style="margin-top:3px;" id="del05" type="button" class="btn btn-xs btn-yellow">删除</button>
+			</div>
+		</div>
+   		</#if>
+   		<div id="vote" class="form-group" style="display: none"></div>
+   		
+   		<div class="form-group weixin">
+			<label class="col-sm-2 control-label no-padding-right">链接</label>
+			<div class="col-sm-6">
+				<div style="display:none;"> 广告Portal页面参考URL： <div style="padding-top: 5px;" id="weixinUrl">
+				   http://portal.uwificloud.com:7878/uwifi_portal?businessid=${(businessid!'')}&weixinno=${(authweixinconfig.weixinno)!''}
+				</div></br>
+				<input type="hidden" name="protalUrl" value="http://portal.uwificloud.com:7878/uwifi_portal?businessid=${(businessid!'')}&weixinno=${(authweixinconfig.weixinno)!''}">
+				<div style="color: red;  padding-top: 10px;">提醒：请将URL作为链接地址在微信内使用</div></div>
+				<input  class="col-xs-10 col-sm-12" type="text" name="" value="${weixinUrl}?busId=${(businessid!'')}" readonly/>
+				<br/><br/><p style="margin-top: 0px;">填入微信公众号的菜单栏中，将可以实现让客户点击菜单直接上网<a href="authStyle/download">如何使用</a></p>
+			</div>
+		</div>
+		<hr/>
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right">认证后行为</label>
+			<div class="col-sm-6">
+				<div class="radio">
+					<label>
+						<input id="tzRadio" type="radio" class="ace" value="1" name="jumptoad" <#if acauth?? && acauth.afterauth == 1> checked="checked" <#else> checked="checked" </#if> />
+						<span class="lbl">跳转到广告页面</span>
+					</label>
+				</div>
+				<div class="radio">
+					<label>
+						<input id="zdRadio" type="radio" class="ace" value="2" name="jumptoad" <#if acauth?? && acauth.afterauth == 2> checked="checked" </#if>/>
+						<span class="lbl">跳转到指定页面</span>
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group zdymDiv" <#if acauth?? && acauth.afterauth == 2> style="display:block;" <#else> style="display:none;" </#if> >
+			<label class="col-sm-2 control-label no-padding-right">指定页面URL</label>
+			<div class="col-sm-6">
+				<#if acauth?? && acauth.afterauth == 2>
+				<input id="zdurl" class="col-xs-10 col-sm-12" name="zdurl" value="${(acauth.portalurl)!''}" type="text">
+				<#else>
+				<input id="zdurl" class="col-xs-10 col-sm-12" name="zdurl" value="" type="text">
+				</#if>
+				
+			</div>
+		</div>
+	</form>
+	</div>
+	</div>
+</div>
+
+<div class="modal-footer">
+	<button onclick="form_submit();return false" class="btn btn-sm btn-primary pull-left">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button style="display:none;" type="button" class="btn btn-sm btn-warning" id="clear_btn">
+		<i class="ace-icon fa fa-undo"></i>重置
+	</button>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+function form_submit(){
+	$("#afterauth").val($("input[name='jumptoad']:checked").val());
+	var form = $("#authStyle");
+	form.bootstrapValidator('validate');
+	var bv = form.data('bootstrapValidator');
+	if(bv.$invalidFields.size() == 0) {
+		
+		var queryString = form.formSerialize();
+		$.post(
+				"templetManage/authStyle",
+				queryString,
+				function(data) {
+					if(data.status == "1"){
+						bootbox.alert(data.msg);
+						//$(".modal-body .alert").remove();
+						//$(".modal-body").prepend('<div class="alert alert-block alert-success"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'+data.msg+'</div>');
+						//window.location.href="authStyle";
+					}else{
+						$(".modal-body .alert").remove();
+						$(".modal-body").prepend('<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'+data.msg+'</div>');
+					}
+				},
+			"json"
+		);
+	}
+}
+$(document).ready(function() {
+	
+	var authtypeId = $('#authtypeId').val();
+	if(authtypeId){
+		if(authtypeId == 0){
+			$('.duanxin').hide();
+			$('.weixin').hide();
+			$('.multiauth').hide();
+			$('.after_tr').hide();
+		}else if(authtypeId ==1){
+			$('.duanxin').show();
+			$('.weixin').hide();
+			$('.multiauth').hide();
+			$('.after_tr').hide();
+		}else if(authtypeId == 2){
+			$('.duanxin').hide();
+			$('.weixin').show();
+			$('.multiauth').hide();
+			$('.after_tr').hide();
+		}else if(authtypeId == 3){
+			$('.duanxin').show();
+			$('.weixin').show();
+			$('.multiauth').show();
+		}
+	}else{
+		$('.duanxin').hide();
+		$('.weixin').hide();
+		$('.after_tr').hide();
+		$('.multiauth').hide();
+	}
+	$('#authduanxin').click(function(){
+		$('.duanxin').show();
+		$('.weixin').hide();
+		$('.after_tr').hide();
+		$('.multiauth').hide();
+	});
+	$('#authweixin').click(function(){
+		$('.duanxin').hide();
+		$('.weixin').show();
+		$('.after_tr').hide();
+		$('.multiauth').hide();
+	});
+	$('#onekey').click(function(){
+		$('.duanxin').hide();
+		$('.weixin').hide();
+		$('.after_tr').hide();
+		$('.multiauth').hide();
+	});
+	$('#authmix').click(function(){
+		$('.duanxin').show();
+		$('.weixin').show();
+		$('.multiauth').show();
+		$('.after_tr').show();
+	});
+	$('#zdRadio').click(function(){
+		$(".zdymDiv").css("display","block");
+		$("#zdurl").val($("#protalurlId").val());
+		$("#zdurl").focus();
+	});
+	$('#tzRadio').click(function(){
+		$("#zdurl").val("");
+		$(".zdymDiv").css("display","none");
+	});
+	
+	var url = "http://portal.uwificloud.com:7878/uwifi_portal?businessid=${(businessid!'')}&weixinno=";
+	
+	$("#weixinno").change(function(){
+		var text = $(this).val();
+		$("#weixinUrl").html(url + text);
+	});
+	
+	$('#authStyle').bootstrapValidator({
+		message: '输入不正确',
+		feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	'multiauthconfig.employeepwd':{
+        		validators: {
+                    notEmpty: {
+                        message: '请输入员工上网密码!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 20,
+                        message: '输入长度不能超过20个字符'
+                    }
+                }
+        	},
+        	'authweixinconfig.weixinno': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入微信号!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 30,
+                        message: '输入长度不能超过30个字符'
+                    }
+                }
+            },
+            'authweixinconfig.weixinname': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入微信名称!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 30,
+                        message: '输入长度不能超过30个字符'
+                    }
+                }
+            },
+            'multiauthconfig.freetime': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入免费使用时间(分钟)！'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 3,
+                        message: '输入长度不能超过3个字符'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '免费使用时间只能输入数字'
+                    }
+                }
+            },
+            'multiauthconfig.tiptitle':{
+            	validators: {
+                    notEmpty: {
+                        message: '请输入提示文本标题!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 50,
+                        message: '输入长度不能超过50个字符'
+                    }
+                }
+            },
+            'zdurl':{
+            	validators: {
+            		notEmpty: {
+                        message: '请输入指定页面URL！'
+                    }
+//             		uri: {
+//                         message: '请输入正确的URL地址！例如：http://www.uwificloud.com'
+//                     }
+                }
+            },
+            'authweixinconfig.url':{
+            	validators: {
+            		notEmpty: {
+                        message: '请输入配置URL！'
+                    }
+//             		uri: {
+//                         message: '请输入配置URL！'
+//                     }
+                }
+            }
+        }
+	});
+	
+	$("#clear_btn").click(function() {
+		$('#authStyle').data('bootstrapValidator').resetForm(true);
+		
+	});
+
+
+});
+
+function changeSmstemplet(){
+	var smsId = $('#smsId').val();
+	$.ajax({
+		type	: 'post',
+		url		: 'templetManage/getSmstemple?id=' + smsId,
+		dataType: 'json',
+		error	: function(){
+			alert('获取模板失败');
+		},
+		success	: function(data){
+			console.log(data.templecontent);
+			$('#templecontent').html(data.templecontent);
+		}
+	});
+}
+
+$(document).ready(function(){  
+	var spotMax = 5;//限定添加text元素的总个数  
+	var afterId = 0;//要追加元素的id  
+	var newId=1;//新生成text的id  
+	$("#btnAddOption").click(function(){ 
+		afterId++;  
+	    newId=afterId+1; 
+	    addSpot(this, spotMax,afterId,newId);  
+	}); 
+	  
+});  
+
+//添加选项方法  
+function addSpot(obj,sm,afterId,newId) 
+{  
+	if($('div.after_tr').size()<sm)
+	{ 
+	    $('#vote').before(  
+	    '<div id="vote_'+newId+'" class="form-group after_tr" > <label class="col-sm-2 control-label no-padding-right">提示文本内容</label>' +  
+	    '<div class="col-sm-6"><input type="text" id="txtInput_'+
+	 afterId+'" class="col-xs-10 col-sm-8" value="" name="tipcontent"/>&nbsp;<button type="button" style="margin-top:3px;" class="btn btn-xs btn-yellow" id="txtInput_del_'+afterId+'">删除</button></div>'+  
+	    '</div>');  
+	}  
+	else
+	{  
+		alert("最多只能添加5项文本内容！");  
+	}  
+	$(document).on("click", "#txtInput_del_"+afterId , function () {
+		$(this).parent().parent().remove();
+		    
+	});
+};  
+
+$(document).on("click", "#del01" , function () {
+	 delTipcontent(1)
+	 $(this).parent().parent().remove();
+});
+$(document).on("click", "#del02" , function () {
+	delTipcontent(2)
+	$(this).parent().parent().remove();
+});
+
+$(document).on("click", "#del03" , function () {
+	delTipcontent(3)
+	$(this).parent().parent().remove();
+});
+
+$(document).on("click", "#del04" , function () {
+	delTipcontent(4)
+	$(this).parent().parent().remove();
+});
+
+$(document).on("click", "#del05" , function () {
+	delTipcontent(5)
+	$(this).parent().parent().remove();
+});
+
+function delTipcontent(tipcontent){
+	$.ajax({
+		type : "post",
+		url : "templetManage/delTipcontent",
+		data : {
+			"acid" : "${(acid)!''}",
+			"tip" : tipcontent
+		},
+		dataType : "json",
+		success : function(data) {
+					
+		}
+	});
+}
+
+
+</script>
+</@layout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus title="首页" icon="fa-home home-icon">
+	<menu action="dashboardchannel">
+		<title>首页</title>
+		<icon>fa-home</icon>
+		<links>dashboardchannel</links>
+	</menu>
+	<menu action="channelManager">
+		<title>渠道管理</title>
+		<icon>fa-ils</icon>
+		<links>channelManager</links>
+	</menu>
+	<menu action="business|channelBusiness">
+		<title>商家管理</title>
+		<icon>fa-inbox</icon>
+		<links>
+			<link>
+				<title>我的商家列表</title>
+				<icon>fa-caret-right</icon>
+				<uri>business</uri>
+			</link>
+			<link>
+				<title>渠道商家列表</title>
+				<icon>fa-caret-right</icon>
+				<uri>channelBusiness</uri>
+			</link>
+		</links>
+	</menu>
+	<menu action="router">
+		<title>路由设备</title>
+		<icon>fa-wifi</icon>
+		<links>router</links>
+	</menu>
+	<menu action="firmWare">
+		<title>设备管理</title>
+		<icon> fa-desktop</icon>
+		<links>firmWare</links>
+	</menu>
+	<menu action="apply">
+		<title>应用管理</title>
+		<icon> fa-th-large</icon>
+		<links>apply</links>
+	</menu>
+</menus>

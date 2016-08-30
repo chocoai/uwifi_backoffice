@@ -1,0 +1,249 @@
+<#include "/admin/layout/layout_channel.html" /> <@layout>
+<!-- Main Content Section with everything -->
+<style>
+<!--
+	table {
+		table-layout:fixed
+	}
+	td {
+		word-break : break-all; overflow:hidden; 
+		text-align: center;	
+	}
+	th {
+		text-align : center;
+	}
+-->
+</style>
+<!-- Page Head -->
+<div class="page-header">
+	<h1>
+	  <p>
+		渠道管理
+	  </p>
+	</h1>
+</div>
+<!-- PAGE CONTENT BEGINS -->
+<form  method="post" id="searchChannel" action="channelManager">
+<div>
+			<div class="input-group col-md-4 col-md-offset-8">
+				<input type="text" placeholder="请输入渠道名称"
+					class="form-control search-query" name="searchName" size="60"
+					value="${(searchName!'')}"> <span class="input-group-btn">
+					<button class="btn btn-purple btn-sm" onclick="searchChannel()">
+						查询 <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+					</button>
+				</span>
+			</div>
+</div>
+<div class="space-12"></div>
+
+<div class="col-sm-12 well well-sm">
+	<div class="col-sm-7">
+	</div>
+	<div class="col-sm-2 no-padding-right">
+<!-- 		角色： -->
+		<select name="searchRole" class="form-control" onchange="searchChannel()" name="busId">
+			<option value="">全部角色</option> 
+			<#list listRole as x>
+				<#if searchRole?? && searchRole = x.id>
+					<option value="${(x.id!'')}" selected="selected">${(x.rolename!"")}</option>
+				<#else>
+					<option value="${(x.id!'')}">${(x.rolename!"")}</option>
+				</#if>
+				
+			</#list>
+		</select>
+	</div>
+	<div class="col-sm-2 no-padding-right">
+		<select class="form-control" name="searchStatus" onchange="searchChannel()"  name="acId">
+			<option value="">全部状态</option>
+				<#if searchStatus?? && searchStatus = 1>
+					<option value="1" selected="selected">启用</option>
+					<option value="0">禁用</option>
+				<#elseif searchStatus?? && searchStatus = 0>
+					<option value="1">启用</option>
+					<option value="0" selected="selected">禁用</option>
+				<#else>
+					<option value="1">启用</option>
+					<option value="0">禁用</option>
+				</#if>
+			
+		</select>
+	</div>
+	<div class="col-sm-1 no-padding-right">
+		<a class="btn btn-info btn-xs" href="channelManager/addChannel">
+			<i class="ace-icon fa fa-building align-top bigger-125"></i> 新增渠道
+		</a>
+	</div>
+
+</div>
+</form>
+<div class="space-12"></div>
+
+<div class="hr hr-double hr-dotted hr18 col-xs-12"></div>
+<div class="col-sm-12 well well-sm">
+<form id="batch"  method="post">
+<table class="table table-striped table-bordered table-hover" >
+	<thead>
+		<tr>
+<!-- 			<th class="center"><label class="position-relative"> <input -->
+<!-- 						type="checkbox" class="ace"> <span class="lbl"></span> -->
+<!-- 				</label></th> -->
+			<th>渠道名称</th>
+			<th>联系人</th>
+			<th>手机</th>
+			<th>区域</th>
+			<th>级别</th>
+			<th>上级渠道</th>
+			<th>状态</th>
+			<th width="16%" class="center">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		<#if channelinfoPage.getTotalRow() != 0 >
+		<#list channelinfoPage.getList() as x>
+		<tr>
+<!-- 			<td class="center"><label class="position-relative"> <input -->
+<!-- 						type="checkbox" class="ace item" name="userIds" value="${x.id}"> -->
+<!-- 						<span class="lbl"></span> -->
+<!-- 				</label></td> -->
+			<td>${(x.channelname!'')}</td>
+			<td>${(x.contacts!'')}</td>
+			<td>${(x.phone!'')}</td>
+			<td>${(x.sf!'')}${(x.cs!'')}</td>
+			<td>${(x.rolename!'')}</td>
+			<td>${(x.pname!'')}</td>
+			<#if x.checkstatus?? && x.checkstatus == 0>
+				<td>未审核</td>
+			<#elseif x.status?? && x.status == 0>
+				<td>
+				 <input name="userinfo.status" class="ace ace-switch ace-switch-3" type="checkbox" onclick="modifyStatusById(${(x.id!'')}, 1, ${(channelinfoPage.pageNumber)!'1'})" /> <span class="lbl"></span>
+				</td>
+			<#elseif x.status?? &&  x.status == 1>
+				<td>
+				 <input name="userinfo.status" class="ace ace-switch ace-switch-3" type="checkbox" checked="checked" onclick="modifyStatusById(${(x.id!'')}, 0, ${(channelinfoPage.pageNumber)!'1'})" /> <span class="lbl"></span>
+				</td>
+			</#if>
+			<td >
+				<div class="hidden-sm hidden-xs action-buttons">
+				  <#if roleid == admin>
+					<#if x.checkstatus?? && x.checkstatus == 0>
+						<a class="blue" href="javascript:void(0)" onclick="checkStatus(${(x.id)}, ${(channelinfoPage.pageNumber)!'1'})" title="审核">
+						<div class="btn btn-xs btn-primary">审核</div>
+						</a>
+					<#elseif x.checkstatus?? &&  x.checkstatus == 1>
+						<button class="btn btn-xs btn-success disabled">已审核</button>
+					</#if>
+				   </#if>
+					<a class="green" href="channelManager/editChannel?id=${(x.id!'')}&roleid=${(x.roleid)!''}&provinceId=${(x.province)!''}&pageNo=${(channelinfoPage.pageNumber)!'1'}" title="编辑">
+					<div class="btn btn-xs btn-info">编辑</div>
+					</a> <a class="delete red" href="${CPATH}/channelManager/delete/${(x.id)}?pageNo=${(channelinfoPage.pageNumber)!'1'}" title="您确认要删除么?">
+					<div class="delete btn btn-xs btn-danger">删除</div>
+					</a> 
+				</div>
+
+				<div class="hidden-md hidden-lg">
+					<div class="inline position-relative">
+						<button class="btn btn-minier btn-yellow dropdown-toggle"
+							data-toggle="dropdown" data-position="auto">
+							<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+						</button>
+					</div>
+				</div>
+			</td>
+		</tr>
+		</#list>
+		<#else>
+		<tr>
+			<td colspan="8" class="align-center">
+				<p class="font20 bolder well lighter red">暂无渠道用户信息</p>
+			</td>
+		<tr>
+		</#if>
+	</tbody>
+</table>
+</form>
+<#include "/admin/layout/_paginate.html" />
+<@paginate currentPage=channelinfoPage.pageNumber totalPage=channelinfoPage.totalPage actionUrl="${CPATH}/channelManager/" urlParas = "?searchRole=${(searchRole!'')}&searchStatus=${(searchStatus!'')}&searchName=${(searchName!'')}" />
+<script type="text/javascript">
+	$(function(){
+		
+		$(document).on('click', 'th input:checkbox' , function(){
+			var that = this;
+			$(this).closest('table').find('tr > td:first-child input:checkbox')
+			.each(function(){
+				this.checked = that.checked;
+				$(this).closest('tr').toggleClass('selected');
+			});
+		});
+		
+		
+	});
+	
+	function modifyChannelStatus(status){
+		
+		if($(".item:checked").size() == 0) {
+			
+			bootbox.alert("请选择要批量修改渠道用户！");
+		} else {
+			
+			bootbox.confirm("您确定要批量修改状态吗？", function(result) {
+				if(result) {
+					var form = $("#batch");
+					var queryString = form.formSerialize();
+					queryString = queryString +"&status="+status
+						$
+						.post(
+								"channelManager/modifyChannelStatus",
+								queryString,
+								function(data) {
+									if (data.status == "1") {
+										window.location.href = "${CPATH}/channelManager";
+									}
+								}, "json");
+				}
+			});
+			
+		}
+	}
+	function modifyStatusById(id,status,pageNo){
+		
+		$.ajax({
+			type : "post",
+			url : "channelManager/modifyStatusById",
+			data : {
+				"id" : id,
+				"status" : status,
+				
+			},
+			dataType : "json",
+			success : function(data) {
+				if (data.status == "1") {
+					window.location.href = "${CPATH}/channelManager/"+pageNo+"?searchRole=${(searchRole!'')}&searchStatus=${(searchStatus!'')}&searchName=${(searchName!'')}";
+				}
+			}
+		});
+	}
+	function checkStatus(id, pageNo){
+		$.ajax({
+			type : "post",
+			url : "channelManager/checkChannelStatus",
+			data : {
+				"id" : id
+			},
+			dataType : "json",
+			success : function(data) {
+				window.location.href = "${CPATH}/channelManager/"+pageNo;
+			}
+		});
+	}
+	function searchChannel(){
+		
+		var form = $("#searchChannel");
+		var queryString = form.formSerialize();
+		form.submit();
+				
+	}
+	
+</script>
+</@layout>

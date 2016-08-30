@@ -1,0 +1,150 @@
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">添加</h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-xs-12">
+			<form class="form-horizontal" id="form" role="form" method="post"
+				action="myRouter/addBwList">
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">请选择类型</label>
+					<div class="col-sm-8">
+						<label> <input type="radio" class="ace" id="macType"
+							name="bwlist.controltype" checked="checked" value="3"> <span
+							class="lbl">Mac地址</span>
+						</label> <label> <input type="radio" class="ace"
+							name="bwlist.controltype" value="2"> <span class="lbl">IP地址</span>
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">请选择店铺</label>
+					<div class="col-sm-8">
+						<select class="form-control input-large no-padding-right" name="bwlist.businessid">
+							<option value="">--请选择店铺--</option> <#list businessinfoList as x>
+							<option value="${(x.id!'')}">${(x.busname!"")}</option> </#list>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">用户设备</label>
+					<div class="col-sm-8">
+						<input type="text" name="bwlist.controlvalue" value=""
+							placeholder="Mac地址或IP地址" class="form-control input-xlarge"><span>MAC地址如(48:5a:b6:9e:47:ff),IP地址如(192.168.10.30)</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">备注</label>
+					<div class="col-sm-8">
+						<input type="text" name="bwlist.comment" value="" placeholder="备注"
+							class="form-control input-xlarge">
+					</div>
+				</div>
+				<input type="hidden" name="bwlist.whtype" value="${whtype!''}">
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button data-dismiss="modal" class="btn btn-sm pull-left">
+		<i class="ace-icon fa fa-times"></i> 取消
+	</button>
+	<button type="button" class="btn btn-sm btn-warning" id="clear_btn">
+		<i class="ace-icon fa fa-undo"></i>重置
+	</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button onclick="form_submit();return false"
+		class="btn btn-sm btn-primary">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#form').bootstrapValidator({
+			message : '输入不正确',
+			feedbackIcons : {
+				valid : 'glyphicon glyphicon-ok',
+				invalid : 'glyphicon glyphicon-remove',
+				validating : 'glyphicon glyphicon-refresh'
+			},
+			fields : {
+				'bwlist.controltype' : {
+					validators : {
+						notEmpty : {
+							message : '请选择类型!'
+						}
+					}
+				},
+				'bwlist.businessid' : {
+					validators : {
+						notEmpty : {
+							message : '请选择店铺!'
+						}
+					}
+				},
+				'bwlist.controlvalue' : {
+					validators : {
+						notEmpty : {
+							message : '请输入Mac地址或IP地址!'
+						},
+						stringLength : {
+							min : 1,
+							max : 30,
+							message : '输入长度不能超过30个字符'
+						},
+						remote: {
+	                        url: 'myRouter/checkMacOrIp',
+	                        data: { whtype: ${whtype!'0'},
+	                        	controltype: function(){return $("input[type='radio']:checked").val()},
+	                        	businessid: function(){return $("select[name='bwlist.businessid']").val()} },
+	                        message: '请参照提示格式输入地址！'
+	                    }
+					}
+				},
+				'bwlist.comment' : {
+					validators : {
+						stringLength : {
+							min : 1,
+							max : 100,
+							message : '输入长度不能超过100个字符'
+						}
+					}
+				}
+			}
+		});
+
+		$("#clear_btn").click(function() {
+			$('#form').data('bootstrapValidator').resetForm(true);
+			$('#macType').prop('checked', true);
+
+		});
+	});
+	function form_submit() {
+		var form = $("#modal form");
+		form.bootstrapValidator('validate');
+		var bv = form.data('bootstrapValidator');
+
+		if (bv.$invalidFields.size() == 0) {
+
+			var queryString = form.formSerialize();
+			$
+					.post(
+							"myRouter/addBwList",
+							queryString,
+							function(data) {
+								if (data.status == "1") {
+									window.location.href = "${CPATH}/myRouter/bwList?whtype=${whtype!'0'}";
+								} else {
+									$("#modal .modal-body .alert").remove();
+									$("#modal .modal-body")
+											.prepend(
+													'<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'
+															+ data.msg
+															+ '</div>');
+								}
+							}, "json");
+		}
+	}
+</script>

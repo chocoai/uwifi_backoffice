@@ -1,0 +1,77 @@
+<#include "/admin/layout/layout_shop.html" /> 
+<@layout>
+<!-- Page Head -->
+<div class="page-header">
+	<h1>
+	  <p>
+		营销活动
+		 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+			${(btnName)!""}
+		</small>
+	  </p>
+	</h1>
+</div>
+
+<!-- PAGE CONTENT BEGINS -->
+<div class="well well-sm col-xs-12">
+	<div class="col-sm-8">
+		<a class="btn btn-info btn-sm" href="marketingActivity/addCoupon?mark=${(mark)!''}" >
+			<i class="ace-icon fa fa-building align-top bigger-125"></i> 新增${(btnName)!""}
+		</a>
+	</div>
+</div>
+
+<div class="hr hr-double hr-dotted hr6 col-xs-12"></div>
+
+<table class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+		   <th>名称</th>
+		   <th class="center">开始时间</th>
+		   <th class="center">结束时间</th>
+		   <th class="center">状态</th>
+		   <th class="center">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+	    <#if lottery.getTotalRow() != 0 >
+	    <#list lottery.getList() as x>
+		<tr>
+			<td class="left">${(x.title!"")}</td>
+			<td class="center">${(x.startdate!"")}</td>
+			<td class="center">${(x.enddate!"")}</td>
+			<td class="center">
+				<#if x.status == 1>
+				<font class="green">已经开始</font>
+				<#else>
+				<font class="red">未开始</font>
+				</#if>
+			</td>
+			<td class="center">
+			  <div class="hidden-sm hidden-xs action-buttons">
+				<a href="marketingActivity/snManager/1-${(x.id!'')}">SN码管理</a>			
+                |<a href="marketingActivity/editCoupon?mark=${(mark)!''}&id=${(x.id!'')}&pageNo=${(lottery.pageNumber)!'1'}">编辑</a>
+                |
+                <#if x.status == 1>
+				<a class="delete" href="marketingActivity/changeStatus?mark=${(mark)!''}&flage=end&id=${(x.id!'')}&pageNo=${(lottery.pageNumber)!'1'}" title="确定结束活动吗？">结束</a>
+				<#else>
+				<a href="marketingActivity/changeStatus?mark=${(mark)!''}&flage=start&id=${(x.id!'')}&pageNo=${(lottery.pageNumber)!'1'}">开始</a>
+				</#if>
+                |<a class="delete" href="${CPATH}/marketingActivity/deleteCoupon?mark=${(mark)!''}&id=${(x.id!'')}&pageNo=${(lottery.pageNumber)!'1'}" title="确认删除">删除</a>			
+			  </div>
+			</td>
+		</tr>
+		</#list>
+		<#else>
+		<tr>
+			<td colspan="5" class="align-center">
+				<p class="font20 bolder well lighter red">无数据</p>
+			</td>
+		<tr>
+		</#if>
+	</tbody>
+</table>
+
+<#include "/admin/layout/_paginate.html" />
+<@paginate currentPage=lottery.pageNumber totalPage=lottery.totalPage actionUrl="${CPATH}/marketingActivity?mark=${mark}@" />
+</@layout>

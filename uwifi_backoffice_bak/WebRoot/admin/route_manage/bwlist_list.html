@@ -1,0 +1,190 @@
+<#include "/admin/layout/layout_new.html" /> <@layout>
+<!-- Main Content Section with everything -->
+<!-- Page Head -->
+<div class="page-header">
+	<h1>
+		<p>
+			我的路由</a> <small> <i class="ace-icon fa fa-angle-double-right"></i>
+				上网管理
+			</small>
+		</p>
+	</h1>
+</div>
+
+<!-- PAGE CONTENT BEGINS -->
+<div class="well well-sm col-sm-9">
+	<form action="myRouter/bwList?whtype=${whtype!'0'}" method="post" id="myRouterFrm">
+		<div class="col-sm-2">
+			<p class="font15 blue bolder">用户列表</p>
+		</div>
+		<div class="col-sm-4">
+			<div class="input-group">
+				<input type="text" placeholder="请输入店铺名称"
+					class="form-control search-query" name="businessName"
+					value="${businessName!''}"> <span class="input-group-btn">
+					<button class="btn btn-purple btn-sm" type="submit">
+						查询
+					</button>
+				</span>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<p>
+				<a class="btn btn-info btn-sm"
+					href="myRouter/addBwList" data-target="#modal"
+					data-toggle="modal">添加
+				</a> <a class="btn btn-success btn-sm" href="myRouter/importBwlist/${whtype!'0'}">从客流导入
+				</a> <a class="btn btn-danger btn-sm" id="multiDelete" href="#">批量删除
+				</a>
+			</p>
+		</div>
+	</form>
+</div>
+<div class="col-sm-3">
+	<p>用户</p>
+	<div>
+		<a class="btn btn-sm btn-block ${(whtype=0)?string('btn-danger active disabled','btn-warning')}" 
+		<#if whtype=0>
+		><i class="fa fa-arrow-circle-left"></i>
+		<#else>
+		href="myRouter/bwList?whtype=0" >
+		</#if>
+			无需认证直接上网(${whiteListCount}人)</a>
+	</div>
+	<div>
+		<a class="btn btn-sm btn-block ${(whtype=1)?string('btn-danger active disabled','btn-warning')}" 
+		<#if whtype=1>
+		><i class="fa fa-arrow-circle-left"></i>
+		<#else>
+			href="myRouter/bwList?whtype=1" >
+		</#if>
+		禁止上网的用户(${blackListCount}人)</a>
+	</div>
+</div>
+<div class="col-sm-9 no-padding">
+	<form id="batch" action="myRouter/multiDeleteBwList" method="post">
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th class="center"><label class="position-relative"> <input
+						type="checkbox" class="ace"> <span class="lbl"></span>
+				</label></th>
+				<th>设备</th>
+				<th>类型</th>
+				<th>店铺</th>
+				<th>备注</th>
+				<th class="center">操作</th>
+			</tr>
+		</thead>
+
+		<#if bwlistPage.getList().size() &gt; 0>
+		<tbody>
+			<#list bwlistPage.getList() as x>
+			<tr>
+				<td class="center"><label class="position-relative"> <input
+						type="checkbox" class="ace item" name="bwIds" value="${x.id}">
+						<span class="lbl"></span>
+				</label></td>
+				<td>${(x.device!"")}</td>
+				<td>${(x.type=2)?string('IP地址','Mac地址')}</td>
+				<td>${(x.businessName!"")}</td>
+				<td>${(x.comment!"")}</td>
+				<td class="center">
+					<div class="hidden-sm hidden-xs action-buttons">
+						<a class="green" href="myRouter/editBwList/${x.id}-${(bwlistPage.pageNumber)!'1'}" title="编辑"
+							data-target="#modal" data-toggle="modal"> <i
+							class="ace-icon fa fa-pencil bigger-130"></i>
+						</a> <a class="delete red" href="${CPATH}/myRouter/deleteBwList/${x.id}-${(bwlistPage.pageNumber)!'1'}"
+							title="您确定要删除吗？"> <i
+							class="ace-icon fa fa-trash-o bigger-130"></i>
+						</a>
+					</div>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+		<#else>
+		<tfoot>
+			<tr>
+				<td colspan="6" class="align-center">
+					<p class="font20 bolder well lighter red">您还没有设置用户，请<a class="" href="myRouter/addBwList" data-target="#modal"
+					data-toggle="modal">添加</a>或者<a class="" href="myRouter/importBwlist/${whtype!'0'}">导入</a></p>
+				</td>
+			<tr>
+		</tfoot>
+		</#if>
+		
+	</table>
+	</form>
+
+	<#if bwlistPage.getList().size() &gt; 0>
+	<div class="row"><#include "/admin/layout/_paginateBySearch.html" />
+		<@paginate currentPage=bwlistPage.pageNumber
+		totalPage=bwlistPage.totalPage actionUrl="${CPATH}/myRouter/bwList/" urlParas=whtype /></div>
+	</#if>
+</div>
+
+<div class="col-sm-3">
+	<p>网站</p>
+	<div>
+		<a class="btn btn-warning btn-sm btn-block" href="myRouter/domainList">允许直接访问的网站(${domainListCount}人)</a>
+	</div>
+</div>
+
+<!-- PAGE CONTENT ENDS -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+jQuery(function($) {
+	$(document).on('click', 'th input:checkbox' , function(){
+		var that = this;
+		$(this).closest('table').find('tr > td:first-child input:checkbox')
+		.each(function(){
+			this.checked = that.checked;
+			$(this).closest('tr').toggleClass('selected');
+		});
+	});
+	
+	$('#multiDelete').on('click', function(event){
+		event.preventDefault();
+		
+		if($(".item:checked").size() == 0) {
+			
+			bootbox.alert("请选择要批量删除的用户设备！");
+		} else {
+			
+			bootbox.confirm("您确定要批量删除吗？", function(result) {
+				if(result) {
+					var form = $("#batch");
+					var queryString = form.formSerialize();
+					$
+					.post(
+							"myRouter/multiDeleteBwList",
+							queryString,
+							function(data) {
+								if (data.status == "1") {
+									window.location.href = "${CPATH}/myRouter/bwList?whtype=${whtype!'0'}";
+								} else {
+									$("#modal .modal-body .alert").remove();
+									$("#modal .modal-body")
+											.prepend(
+													'<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'
+															+ data.msg
+															+ '</div>');
+								}
+							}, "json");
+				}
+			});
+			
+		}
+	});
+});
+
+
+function searchForPage(url){
+		var frm = $("#myRouterFrm");
+		frm.attr("action",url);
+		frm.submit();
+}
+</script>
+</@layout>

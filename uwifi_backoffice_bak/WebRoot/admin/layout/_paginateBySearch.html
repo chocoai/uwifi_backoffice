@@ -1,0 +1,76 @@
+<#macro paginate currentPage totalPage actionUrl urlParas="">
+
+<div class="row">
+	<div class="col-xs-1">
+<!-- 		<div class="dataTables_info" id="sample-table-2_info" role="status" -->
+<!-- 			aria-live="polite">Showing 11 to 20 of 23 entries</div> -->
+	</div>
+	<div class="col-xs-11">
+		<div class="dataTables_paginate paging_simple_numbers"
+			id="sample-table-2_paginate">
+			
+			<#if (totalPage <= 0) || (currentPage > totalPage)><#return></#if>
+			<#local startPage = currentPage - 4>
+			<#if (startPage < 1)><#local startPage = 1></#if>
+	
+			<#local endPage = currentPage + 4>
+			<#if (endPage > totalPage)><#local endPage = totalPage></#if>
+			
+			<ul class="pagination" >
+			
+				<#if (currentPage <= 8)>
+					<#local startPage = 1>
+				</#if>
+				<#if ((totalPage - currentPage) < 8)>
+					<#local endPage = totalPage>
+				</#if>
+			
+				<#if (currentPage == 1)>
+					<li class="paginate_button previous disabled" aria-controls="sample-table-2"
+					tabindex="0" id="sample-table-2_previous"><a>上一页</a></li>
+				<#else>
+					<li class="paginate_button previous " aria-controls="sample-table-2"
+					tabindex="0" id="sample-table-2_previous"><a href="javascript:searchForPage('${actionUrl}#{currentPage - 1}-${urlParas!}')">上一页</a></li>
+				</#if>
+				<#if (currentPage > 8)>
+				<li class="paginate_button " aria-controls="sample-table-2"
+					tabindex="0"><a href="javascript:searchForPage('${actionUrl}#{1}-${urlParas!}')">#{1}</a></li>
+				<li class="paginate_button " aria-controls="sample-table-2"
+				tabindex="0"><a href="javascript:searchForPage('${actionUrl}#{2}-${urlParas!}')">#{2}</a></li>
+					<li class="paginate_button " aria-controls="sample-table-2"
+				tabindex="0"><a >...</a></li>
+				</#if>
+				
+				<#list startPage..endPage as i>
+				<#if currentPage == i>
+					<li class="paginate_button active" aria-controls="sample-table-2"
+				tabindex="0"><a>#{i}</a></li>
+				<#else>
+					<li class="paginate_button " aria-controls="sample-table-2"
+				tabindex="0"><a href="javascript:searchForPage('${actionUrl}#{i}-${urlParas!}')">#{i}</a></li>
+				</#if>
+				</#list>
+				
+				<#if ((totalPage - currentPage) >= 8)>
+				<li class="paginate_button " aria-controls="sample-table-2"
+				tabindex="0"><a >...</a></li>
+				<li class="paginate_button " aria-controls="sample-table-2"
+				tabindex="0"><a href="javascript:searchForPage('${actionUrl}#{totalPage - 1}-${urlParas!}')">#{totalPage - 1}</a></li>
+				<li class="paginate_button " aria-controls="sample-table-2"
+				tabindex="0"><a href="javascript:searchForPage('${actionUrl}#{totalPage}-${urlParas!}')">#{totalPage}</a></li>
+				</#if>
+				
+				<#if (currentPage == totalPage)>
+					<li class="paginate_button next disabled" aria-controls="sample-table-2"
+					tabindex="0" id="sample-table-2_next"><a >下一页</a></li>
+				<#else>
+				<li class="paginate_button next" aria-controls="sample-table-2"
+					tabindex="0" id="sample-table-2_next"><a href="javascript:searchForPage('${actionUrl}#{currentPage + 1}-${urlParas!}')">下一页</a></li>
+				</#if>
+				
+				
+			</ul>
+		</div>
+	</div>
+</div>
+</#macro>

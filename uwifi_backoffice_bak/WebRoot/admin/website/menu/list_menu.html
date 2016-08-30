@@ -1,0 +1,267 @@
+<#include "/admin/layout/layout_shop.html" /> <@layout>
+<style>
+<!--
+	table {
+		table-layout:fixed
+	}
+	td {
+		word-break : break-all; overflow:hidden; 
+	}
+-->
+</style>
+<div class="page-header">
+	<h1>
+		<P>
+		广告页面
+		 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+			底部导航菜单
+		</small>
+		</P>
+	</h1>
+</div>
+<div class="tabbable">
+	<ul class="nav nav-tabs padding-18 tab-size-bigger" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#faq-tab-1"> <i
+				class="blue ace-icon fa fa-cog bigger-120"></i> 底部菜单分类设置
+		</a></li>
+
+		<li><a data-toggle="tab" href="#faq-tab-2"> <i
+				class="green ace-icon fa fa-magic bigger-120"></i> 底部菜单风格选择
+		</a></li>
+
+		<li><a data-toggle="tab" href="#faq-tab-3"> <i
+				class="orange ace-icon fa fa-credit-card bigger-120"></i> 菜单颜色与版权
+		</a></li>
+
+
+	</ul>
+
+	<div class="tab-content no-border padding-24">
+		<div id="faq-tab-1" class="tab-pane fade in active">
+			<h2 class="red">需选择一个底部菜单风格，菜单才会起作用!</h2>
+			<div class="well well-sm col-xs-12">
+				<div class="col-sm-8">
+					<a class="btn btn-info btn-sm"
+						href="navigatemenu/addBottomMenu<#if (sitecatemenu.id)??>?id=${(sitecatemenu.id)}</#if>" >
+						<i class="ace-icon fa fa-building align-top bigger-125"></i>
+						添加<#if (sitecatemenu.name)??>${(sitecatemenu.name)}子</#if>菜单
+					</a>
+				</div>
+			</div>
+			</br>
+			<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>店铺名称</th>
+							<th>菜单名称</th>
+							<th>显示顺序</th>
+							<th>图标地址</th>
+							<th>外链地址</th>
+							<th>首页显示</th>
+							<th >操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					<#if sitecatemenuinfoPage.getTotalRow() != 0 >
+					<#list sitecatemenuinfoPage.getList() as x>
+						<tr>
+							<td>${(x.busname!'')}</td>
+							<td>${(x.name)!''}</td>
+							<td>${(x.sort)!''}</td>
+							<td><img alt="" src="${(uploadPath!'')}${(x.img!'')}" height="100" width="120"></td>
+							<td>${(x.url)!''}</td>
+							<#if x.status?? && x.status == 1>
+							<td>显示</td>
+							<#else>
+							<td>不显示</td>
+							</#if>
+							<td >
+								<div class="hidden-sm hidden-xs action-buttons">
+									<#if x.fid == 0>
+									<a class="blue" href="navigatemenu/subMenuList/1?fid=${(x.id!'')}" title="子菜单"> <i
+										class="ace-icon fa fa-building bigger-130"></i>
+									</a>
+									</#if>
+									 <a class="green" href="navigatemenu/editBottomMenu?id=${(x.id!'')}&fid=${(x.fid!'')}&pageNo=${(sitecatemenuinfoPage.pageNumber)!'1'}" title="编辑"> <i
+										class="ace-icon fa fa-pencil bigger-130"></i>
+									</a> <a class="delete red" href="${CPATH}/navigatemenu/delete?id=${(x.id!'')}&fid=${(x.fid!'')}&pageNo=${(sitecatemenuinfoPage.pageNumber)!'1'}" title="您确定要删除么?"> <i
+										class="ace-icon fa fa-trash-o bigger-130"></i>
+									</a>
+								</div>
+	
+							</td>
+						</tr>
+						</#list>
+						<#else>
+						<tr>
+							<td colspan="7" class="align-center">
+								<p class="font20 bolder well lighter red">暂无底部菜单数据</p>
+							</td>
+						<tr>
+						</#if>
+					</tbody>
+				</table>
+			<#if sitecatemenuinfoPage.getTotalRow() != 0 >
+				<#include "/admin/layout/_paginate.html" />
+				<@paginate currentPage=sitecatemenuinfoPage.pageNumber totalPage=sitecatemenuinfoPage.totalPage actionUrl="${CPATH}/navigatemenu/${isSubMenu!''}" urlParas=id/>				
+			</#if>
+
+		</div>
+
+		<div id="faq-tab-2" class="tab-pane fade">
+								
+								<div class="clearfix" >
+								
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<a href="javascript:selectMenuStyle(0)"><img alt="Bob Doe's avatar" src="resources/images/menu/menu0.png" /></a>
+										<p align="center">
+										<#if (siteinfo.radiogroup)?? && siteinfo.radiogroup == 0>
+											<input type="radio" name="tpltypename" id="tpltype0" onchange="selectMenuStyle(0);" checked="checked"/>关闭底部导航</p>
+										<#else>
+											<input type="radio" name="tpltypename" id="tpltype0" onchange="selectMenuStyle(0);" />关闭底部导航</p>
+										</#if>
+										
+									</div>
+
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<a href="javascript:selectMenuStyle(1)"><img alt="Bob Doe's avatar" src="resources/images/menu/menu1.png" /></a>
+										<p align="center">
+										<#if (siteinfo.radiogroup)?? && siteinfo.radiogroup == 1>
+											<input type="radio" name="tpltypename" id="tpltype1" onchange="selectMenuStyle(1);" checked="checked" />左侧展开</p>
+										<#else>
+											<input type="radio" name="tpltypename" id="tpltype1" onchange="selectMenuStyle(1);" />左侧展开</p>
+										</#if>
+									</div>
+
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<a href="javascript:selectMenuStyle(2)"><img alt="Bob Doe's avatar" src="resources/images/menu/menu2.png" /></a>
+										<p align="center">
+										<#if (siteinfo.radiogroup)?? && siteinfo.radiogroup == 2>
+											<input type="radio" name="tpltypename" id="tpltype2" onchange="selectMenuStyle(2);" checked="checked" />右侧展开</p>
+										<#else>
+											<input type="radio" name="tpltypename" id="tpltype2" onchange="selectMenuStyle(2);" />右侧展开</p>
+										</#if>
+										
+									</div>
+
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<a href="javascript:selectMenuStyle(3)"><img alt="Bob Doe's avatar" src="resources/images/menu/menu3.png" /></a>
+										<p align="center">
+										<#if (siteinfo.radiogroup)?? && siteinfo.radiogroup == 3>
+											<input type="radio" name="tpltypename" id="tpltype3" onchange="selectMenuStyle(3);" checked="checked" />左侧滑入</p>
+										<#else>
+											<input type="radio" name="tpltypename" id="tpltype3" onchange="selectMenuStyle(3);" />左侧滑入</p>
+										</#if>
+										
+									</div>
+
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<a href="javascript:selectMenuStyle(4)"><img alt="Bob Doe's avatar" src="resources/images/menu/menu4.png" /></a>
+										<p align="center">
+										<#if (siteinfo.radiogroup)?? && siteinfo.radiogroup == 4>
+											<input type="radio" name="tpltypename" id="tpltype4" onchange="selectMenuStyle(4);" checked="checked" />右侧滑入</p>
+										<#else>
+											<input type="radio" name="tpltypename" id="tpltype4" onchange="selectMenuStyle(4);" />右侧滑入</p>
+										</#if>
+									</div>
+
+								</div>
+								
+							</div>
+								
+		</div>
+
+		<div id="faq-tab-3" class="tab-pane fade">
+			<form class="form-horizontal" id="add-classify-form" role="form" action="navigatemenu/modifyCopyright" method="post">
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right"
+						for="form-field-1"> 请选择菜单颜色  </label>
+					<div class="col-sm-9">
+						<div class="bootstrap-colorpicker">
+							<input id="colorpicker1" type="text" class="input-small" value="${(siteinfo.plugmenucolor)!''}">
+						</div>
+					</div>
+						
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right"
+						for="form-field-1"> 设置页面版权  </label>
+			
+					<div class="col-sm-9">
+						<input type="text" id="copyright" name="copyright" class="col-xs-10 col-sm-5" value="${(siteinfo.copyright)!''}">
+						<span class="col-xs-10 col-sm-5" >例如：@2008-2014某某版权所有</span>
+					</div>
+				</div>
+				
+				<div class="space-4"></div>
+
+				<div class="clearfix form-actions">
+					<div class="col-md-offset-3 col-md-9">
+						<button class="btn btn-info" type="button" onclick="modifyCopyright()">
+							<i class="ace-icon fa fa-check bigger-110"></i> 提交
+						</button>
+			
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn" type="reset">
+							<i class="ace-icon fa fa-undo bigger-110"></i> 重置
+						</button>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+
+
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		
+		$('#colorpicker1').colorpicker();
+	});
+	function selectMenuStyle(radiogroup){
+		$.ajax({
+			type : "post",
+			url : "navigatemenu/selectMenuStyle",
+			data : {
+				"radiogroup" : radiogroup
+			},
+			dataType : "json",
+			success : function(data) {
+				
+				bootbox.alert(data.infoMsg);
+				$('#tpltype'+radiogroup).removeAttr("checked");
+				$('#tpltype'+radiogroup).prop("checked",true);
+			}
+		});
+	}
+	function modifyCopyright(){
+		var copyright = $('#copyright').val();
+		var plugmenucolor = $('#colorpicker1').val();
+		$.ajax({
+			type : "post",
+			url : "navigatemenu/modifyCopyright",
+			data : {
+				"copyright" : copyright,
+				"plugmenucolor" : plugmenucolor
+			},
+			dataType : "json",
+			success : function(data) {
+				
+				bootbox.alert(data.infoMsg);
+			}
+		});
+	}
+
+</script>
+</@layout>

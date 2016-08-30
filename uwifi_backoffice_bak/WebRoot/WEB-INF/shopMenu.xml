@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus title="首页" icon="fa-home home-icon">
+	<menu action="dashboard">
+		<title>返回首页</title>
+		<icon>fa-home</icon>
+		<links>dashboard</links>
+	</menu>
+	<menu action="authStyle">
+		<title>认证方式</title>
+		<icon>fa-ils</icon>
+		<links>authStyle</links>
+	</menu>
+
+	<menu action="templetManage|templetFlashManage">
+		<title>认证页面</title>
+		<icon>fa-inbox</icon>
+		<links>
+			<link>
+				<title>模板选择</title>
+				<icon>fa-caret-right</icon>
+				<uri>templetManage</uri>
+			</link>
+			<link>
+				<title>首页幻灯片</title>
+				<icon>fa-caret-right</icon>
+				<uri>templetFlashManage</uri>
+			</link>
+		</links>
+	</menu>
+
+	<menu action="classify|content|module|siteflash|sitecarousel|navigatemenu">
+		<title>广告页面</title>
+		<icon>fa-picture-o</icon>
+		<links>
+			<link>
+				<title>模板管理</title>
+				<icon>fa-caret-right</icon>
+				<uri>module</uri>
+			</link>
+			<link>
+				<title>分类管理</title>
+				<icon>fa-caret-right</icon>
+				<uri>classify</uri>
+			</link>
+			<link>
+				<title>内容管理</title>
+				<icon>fa-caret-right</icon>
+				<uri>content</uri>
+			</link>
+			<link>
+				<title>首页幻灯片</title>
+				<icon>fa-caret-right</icon>
+				<uri>siteflash</uri>
+			</link>
+			<link>
+				<title>轮播背景图</title>
+				<icon>fa-caret-right</icon>
+				<uri>sitecarousel</uri>
+			</link>
+			<link>
+				<title>底部导航菜单</title>
+				<icon>fa-caret-right</icon>
+				<uri>navigatemenu</uri>
+			</link>
+		</links>
+	</menu>
+	<menu action="member">
+		<title>会员管理 </title>
+		<icon>fa fa-user</icon>
+		<links>
+			<link>
+				<title>会员信息</title>
+				<icon>fa-caret-right</icon>
+				<uri>member</uri>
+			</link>
+		</links>
+	</menu>
+	<menu action="marketingActivity">
+		<title>营销活动</title>
+		<icon>fa-yelp</icon>
+		<links>
+			<link>
+				<title>幸运大转盘</title>
+				<icon>fa-caret-right</icon>
+				<uri>marketingActivity?mark=xydzp</uri>
+			</link>
+			<link>
+				<title>优惠券</title>
+				<icon>fa-caret-right</icon>
+				<uri>marketingActivity?mark=yhq</uri>
+			</link>
+			<link>
+				<title>刮刮卡</title>
+				<icon>fa-caret-right</icon>
+				<uri>marketingActivity?mark=ggk</uri>
+			</link>
+			<link>
+				<title>砸金蛋</title>
+				<icon>fa-caret-right</icon>
+				<uri>marketingActivity?mark=zjd</uri>
+			</link>
+			<link>
+				<title>幸运水果机</title>
+				<icon>fa-caret-right</icon>
+				<uri>marketingActivity?mark=xysgj</uri>
+			</link>
+		</links>
+	</menu>
+</menus>

@@ -1,0 +1,112 @@
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">编辑账号信息</h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-xs-12">
+			<form class="form-horizontal" id="add-user-from" role="form"
+				method="post" action="sysUser/addUser">
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">用户名</label>
+					<div class="col-sm-8">
+						${(userinfo.loginname)!}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">昵称</label>
+					<div class="col-sm-8">
+						<input type="text" name="userinfo.nickname" value="${(userinfo.nickname)!}"
+							placeholder="请输入昵称" class="form-control input-large">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">状态</label>
+					<div class="col-sm-8">
+						<label> <input name="userinfo.status"
+							class="ace ace-switch ace-switch-3" type="checkbox" 
+							<#if userinfo.status>
+							 checked="checked"
+							 </#if>
+							  >
+							<span class="lbl"></span>
+						</label>
+					</div>
+				</div>
+				<input type="hidden" name="userinfo.id" value="${userinfo.id}">
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button data-dismiss="modal" class="btn btn-sm pull-left">
+		<i class="ace-icon fa fa-times"></i> 取消
+	</button>
+	<button type="button" class="btn btn-sm btn-warning" id="clear_btn">
+		<i class="ace-icon fa fa-undo"></i>重置
+	</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button onclick="form_submit();return false"
+		class="btn btn-sm btn-primary">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#add-user-from').bootstrapValidator({
+			message : '输入不正确',
+			feedbackIcons : {
+				valid : 'glyphicon glyphicon-ok',
+				invalid : 'glyphicon glyphicon-remove',
+				validating : 'glyphicon glyphicon-refresh'
+			},
+			fields : {
+				'userinfo.nickname' : {
+					validators : {
+						notEmpty : {
+							message : '请输入昵称!'
+						},
+						stringLength : {
+							min : 1,
+							max : 30,
+							message : '输入长度不能超过30个字符'
+						}
+					}
+				}
+			}
+		});
+
+		$("#clear_btn").click(function() {
+			$('#add-user-from').data('bootstrapValidator').resetForm(true);
+
+		});
+	});
+	function form_submit() {
+		var form = $("#modal form");
+		form.bootstrapValidator('validate');
+		var bv = form.data('bootstrapValidator');
+
+		if (bv.$invalidFields.size() == 0) {
+
+			var queryString = form.formSerialize();
+			$
+					.post(
+							"sysUser/editUser",
+							queryString,
+							function(data) {
+								if (data.status == "1") {
+									window.location.href = "${CPATH}/sysUser/${currentPage!'1'}";
+								} else {
+									$("#modal .modal-body .alert").remove();
+									$("#modal .modal-body")
+											.prepend(
+													'<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'
+															+ data.msg
+															+ '</div>');
+								}
+							}, "json");
+		}
+	}
+</script>

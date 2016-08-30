@@ -1,0 +1,389 @@
+<#include "/admin/layout/layout_channel.html" /> <@layout>
+
+<div class="page-header">
+	<h1>
+	  <p>
+		 渠道管理 <small> <i
+			class="ace-icon fa fa-angle-double-right"></i> 编辑渠道
+		</small>
+	  </p>
+	</h1>
+</div>
+<form class="form-horizontal" id="edit-channel-form" role="form" action="channelManager/editChannel?id=${(userinfo.id)!''}&pageNo=${(currentPage)!'1'}" method="post">
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"><span class="red">*</span> 渠道名称 </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.channelname" class="col-xs-10 col-sm-5" value="${(userinfo.channelname)!''}">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> <span class="red">*</span>渠道级别 </label>
+		<#if roleid == "1">
+		<div class="col-sm-9">
+			<select id="channelClass" name="userinfo.roleid" onchange="getClassChannel()">
+				<option value="">--请选择--</option> 
+				<#list listRole as x>
+					<#if userinfo.roleid = x.id>
+					<option value="${(x.id!'')}" selected="selected">${(x.rolename!"")}</option>
+					<#else>
+					<option value="${(x.id!'')}">${(x.rolename!"")}</option>
+					</#if>
+				
+				</#list>
+			</select>
+		</div>
+		<#else>
+		<div class="col-sm-9">
+			<select id="channelClass" name="userinfo.roleid" >
+				<option value="4">银牌渠道</option> 
+			</select>
+		</div>
+		</#if>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> <span class="red">*</span>上级渠道 </label>
+		<#if roleid == "1">
+		<div class="col-sm-9">
+			<select id="superChannel" name="userinfo.pid">
+				<option value="">--请选择--</option> 
+				<#list listuser as x>
+					<#if userinfo.pid = x.id>
+					<option value="${(x.id!'')}" selected="selected">${(x.channelname!"")}</option>
+					<#else>
+					<option value="${(x.id!'')}">${(x.channelname!"")}</option>
+					</#if>
+				
+				</#list>
+			</select>
+		</div>
+		<#else>
+		<div class="col-sm-9">
+			<select id="superChannel" name="userinfo.pid">
+				<option value="${(uid)}">${(channelname)}</option> 
+			</select>
+		</div>
+		</#if>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"><span class="red">*</span> 联系人 </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.contacts" class="col-xs-3" value="${(userinfo.contacts)!''}">（必填，长度2-10字符）
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"><span class="red">*</span> 手机  </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.phone" class="col-xs-3" value="${(userinfo.phone)!''}">（必填，长度为11位数字）
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> QQ </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.qq" class="col-xs-3" value="${(userinfo.qq)!''}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"><span class="red">*</span> 区域 </label>
+		<div class="col-sm-9">
+			<select name="userinfo.province" onchange="getCityByProvince(this)">
+				<option value="">--请选择--</option> 
+				<#list provinceList as province>
+					<#if userinfo.province = province.bm >
+						<option value="${(province.bm!'')}" selected="selected">${(province.mc!"")}</option>
+					<#else>
+					<option value="${(province.bm!'')}" >${(province.mc!"")}</option>
+					</#if>
+					
+				</#list>
+			</select>&nbsp;&nbsp;
+			<select name="userinfo.city" id="citySel">
+				<option value="">--请选择--</option>
+				<#list cityList as city>
+					<#if userinfo.city = city.bm >
+						<option value="${(city.bm!'')}" selected="selected">${(city.mc!"")}</option>
+					<#else>
+					<option value="${(city.bm!'')}" >${(city.mc!"")}</option>
+					</#if>
+					
+				</#list> 
+			</select>
+		</div>
+		
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 详细地址 </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.address"  class="col-xs-10 col-sm-5" value="${(userinfo.address)!''}">
+			
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> <span class="red">*</span>账号 </label>
+
+		<div class="col-sm-9">
+			<label class="no-padding-left"> ${(userinfo.loginname)!''} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a class="btn btn-info btn-sm" href="channelManager/changePass/${(userinfo.id)}"
+					data-target="#modal" data-toggle="modal">重置密码</a></label>
+		</div>
+	</div>
+<!-- 	<#if roleid?? && roleid = "1"> -->
+<!-- 	 <div class="form-group" > -->
+<!-- 		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span> 状态</label> -->
+<!-- 		<div class="col-sm-9"> -->
+<!-- 			<#if userinfo.status == 1> -->
+<!-- 			<div class="radio"> -->
+<!-- 				<label> -->
+<!-- 					<input name="userinfo.status" type="radio" class="ace" value="1" checked="checked" /> -->
+<!-- 					<span class="lbl">启用</span> -->
+<!-- 				</label> -->
+<!-- 				<label> -->
+<!-- 					<input name="userinfo.status" type="radio" class="ace" value="0" /> -->
+<!-- 					<span class="lbl">禁用</span> -->
+<!-- 				</label> -->
+<!-- 			</div> -->
+<!-- 			<#else> -->
+<!-- 			 <div class="radio"> -->
+<!-- 				<label> -->
+<!-- 					<input name="userinfo.status" type="radio" class="ace" value="1"  /> -->
+<!-- 					<span class="lbl">启用</span> -->
+<!-- 				</label> -->
+<!-- 				<label> -->
+<!-- 					<input name="userinfo.status" type="radio" class="ace" value="0" checked="checked" /> -->
+<!-- 					<span class="lbl">禁用</span> -->
+<!-- 				</label> -->
+<!-- 			</div> -->
+<!-- 			</#if> -->
+<!-- 		</div> -->
+<!-- 	  </div> -->
+<!-- 	</#if> -->
+	<div class="space-4"></div>
+
+
+	<div class="clearfix form-actions">
+		<div class="col-md-offset-3 col-md-9">
+			<button class="btn btn-info" type="submit">
+				<i class="ace-icon fa fa-check bigger-110"></i> 提交
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn" type="reset" id="clear_btn" >
+				<i class="ace-icon fa fa-undo bigger-110"></i> 重置
+			</button>
+		</div>
+	</div>
+
+
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	jQuery.validator.addMethod("chrnum", function(value, element) {
+		var chrnum = /^([a-zA-Z0-9]+)$/;
+		return this.optional(element) || (chrnum.test(value));
+		}, "只能输入数字和字母(字符A-Z, a-z, 0-9)");
+	jQuery.validator.addMethod("isMobile", function(value, element) {
+		  var length = value.length;
+		  return this.optional(element) || (length == 11);
+		 }, "请正确填写您的手机号码!");
+	
+	//输入验证
+	$("#edit-channel-form").validate({
+		rules: {
+			"userinfo.channelname" : {
+				required : true,
+				maxlength : 50,
+				remote: {
+                    url: "channelManager/checkNameDouble",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                    	"id" : function () {
+                            return ${(userinfo.id)!''};　　　　
+                        }
+                    }
+                }
+			},
+			"userinfo.roleid" : {
+				required : true
+			},
+			"userinfo.pid" : {
+				required : true
+			},
+			"userinfo.contacts" : {
+				required : true,
+				minlength : 2,
+				maxlength : 10
+			},
+			"userinfo.phone" : {
+				required : true,
+				digits: true,
+				isMobile : true
+			},
+			"userinfo.qq" : {
+				digits: true
+			},
+			"userinfo.province" : {
+				required : true
+			},
+			"userinfo.city" : {
+				required : true
+			},
+			"userinfo.loginname" : {
+				required : true,
+				chrnum : true,
+				maxlength : 30,
+				remote: {
+                    url: "channelManager/checkNameDouble",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                    	"id" : function () {
+                            return ${(userinfo.id)!''};　　　　
+                        }
+                    }
+                    
+                }
+				
+			},
+			"userinfo.password" : {
+				required : true,
+				minlength : 6,
+				maxlength : 20
+			},
+			"pwd" : {
+				required : true,
+				minlength : 6,
+				maxlength : 20,
+				equalTo: "#password"
+			},
+			"userinfo.status" : {
+				required : true
+			}
+			
+			
+		},
+		messages: {
+			"userinfo.channelname" : {
+				required : "请输入渠道名称 !",
+				maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+				remote : "渠道名称重复，请重新输入!"
+			},
+			"userinfo.roleid" : {
+				required : "请选择渠道级别 !"
+			},
+			"userinfo.pid" : {
+				required : "请选择上级渠道 !"
+			},
+			"userinfo.contacts" : {
+				required : "请输入联系人 !",
+				minlength : jQuery.validator.format("请输入一个 长度最少是 {0} 的字符串"),
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+			},
+			"userinfo.phone" : {
+				required : "请输入手机号 !",
+				digits: "只能输入整数 !",
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+			},
+			"userinfo.qq" : {
+				digits: "只能输入整数 !"
+			},
+			"userinfo.province" : {
+				required : "请选择所在省!"
+			},
+			"userinfo.city" : {
+				required : "请选择所在市 !"
+			},
+			"userinfo.loginname" : {
+				required : "请输入账号 !",
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+				remote : "用户名重复，请重新输入!"
+				
+			},
+			"userinfo.password" : {
+				required : "请输入密码 !",
+				minlength : jQuery.validator.format("请输入一个 长度最少是 {0} 的字符串"),
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+			},
+			"pwd" : {
+				required : "请输入重复密码 !",
+				minlength : jQuery.validator.format("请输入一个 长度最少是 {0} 的字符串"),
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+			},
+			
+			
+			
+		}
+	});
+	
+
+   
+});
+
+function getClassChannel() {
+	var channelClassId = $('#channelClass').val();
+	$('#superChannel').empty();
+	var superChannel = $('#superChannel');
+	$.ajax({
+		type : "post",
+		url : "channelManager/getChannelRole",
+		data : {
+			"roleid" : channelClassId
+		},
+		dataType : "json",
+		success : function(data) {
+			if(data == 0){
+				
+				superChannel.append('<option value="">--请选择--</option>');
+			}
+			$.each(data, function(n, data) {
+				superChannel.append('<option value="'+data.id+'">'
+						+ data.channelname + '</option>');
+
+			});
+		}
+	});
+}
+function getCityByProvince(obj){
+	$('#citySel').empty();
+	var cityInfo = $('#citySel');
+	$.ajax({
+		type : "post",
+		url : "business/getCity",
+		data : {"provinceId" : obj.value},
+		dataType : "json",
+		success : function(data) {
+			if(data.length > 0){
+				cityInfo.append('<option value="" selected>' + "--请选择--" + '</option>');
+				$.each(data, function(key, item) {
+					cityInfo.append('<option value="'+item.bm+'">' + item.mc + '</option>');
+				});
+			}else{
+				cityInfo.append('<option value="" selected>' + "--请选择--" + '</option>');
+			}
+		}
+	});
+}
+</script>
+</@layout>

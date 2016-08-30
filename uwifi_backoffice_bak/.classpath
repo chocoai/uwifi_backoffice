@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jfinal-1.9-bin.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/mchange-commons-java-0.2.7.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/druid-1.0.5.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/mysql-connector-java-5.1.9.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/slf4j-log4j12-1.6.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/webrpc.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/httpclient-4.3.5.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/httpcore-4.3.2.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jackson-annotations-2.4.3.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jackson-core-2.4.3.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jackson-databind-2.4.3.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jdom-2.0.5.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/ehcache-core-2.5.2.jar"/>
+	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
+</classpath>

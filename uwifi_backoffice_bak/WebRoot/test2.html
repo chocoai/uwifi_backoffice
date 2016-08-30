@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>轮播示例</title>
+<link href="http://www.see-source.com/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="http://www.see-source.com/bootstrap/css/docs.css" rel="stylesheet"">
+<script type="text/javascript" src="http://www.see-source.com/bootstrap/js/jquery.js"></script>
+<script type="text/javascript" src="http://www.see-source.com/bootstrap/js/bootstrap-carousel.js"></script>
+<style type="text/css">
+body{width:800px; margin:auto; margin-top:100px;}
+</style>
+</head>
+<body>
+  <div id="myCarousel" class="carousel slide">
+    <ol class="carousel-indicators">
+       <li data-target="#myCarousel" data-slide-to="0"  class="" ></li>
+       <li data-target="#myCarousel" data-slide-to="1" class=""></li>
+       <li data-target="#myCarousel" data-slide-to="2" class="active"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="item">
+           <img src="http://www.see-source.com/bootstrap/demo/images/bootstrap-mdo-sfmoma-01.jpg" width="100px" height="200px" alt="">
+           <img src="http://www.see-source.com/bootstrap/demo/images/bootstrap-mdo-sfmoma-02.jpg" width="100px" height="200px"  alt="">
+           <img src="http://www.see-source.com/bootstrap/demo/images/bootstrap-mdo-sfmoma-02.jpg" width="100px" height="200px"  alt="">
+        </div>
+        <div class="item">
+                    <img src="http://www.see-source.com/bootstrap/demo/images/bootstrap-mdo-sfmoma-02.jpg" alt="">
+        </div>
+        <div class="item active">
+                    <img src="http://www.see-source.com/bootstrap/demo/images/bootstrap-mdo-sfmoma-03.jpg" alt="">
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
+  </div>
+</body>
+</html>
+<script type="text/javascript"> 
+$('#myCarousel').carousel('next');
+</script>

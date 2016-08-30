@@ -1,0 +1,171 @@
+ <#include "/admin/layout/layout.html" />
+<@layout> 
+	<link rel="stylesheet" href="resources/css/module.css" type="text/css" media="screen" />  
+	<link rel="stylesheet" href="resources/css/fileuploader.css" type="text/css" media="screen" />  
+	<script type="text/javascript" src="resources/scripts/fileuploader.js"></script>
+    <!-- Page Head -->
+	<ul class="breadcrumb">
+		<li><a title="我的工作台" href="dashboard" >我的工作台</a> <span class="divider">/</span>&nbsp;</li>
+		<li><a title="路由管理"  href="onlinestatus">路由管理</a> <span class="divider">/</span>&nbsp;</li>
+		<li class="active">黑白名单信息修改</li>
+	</ul>
+    
+    <div class="content-box">
+	<div class="content-box-header">
+		<h3>黑白名单信息修改</h3>
+	</div>
+	 <!-- End .content-box-header -->
+
+	<div id="module" class="content-box-content">
+		<div class="notification information png_bg" id="info" style="display: none">
+        	<div id="infoMsg"></div>
+            <a class="close" href="#"><img alt="close" title="Close this notification" src="resources/images/icons/cross_grey_small.png"></a>
+        </div>
+	    
+	    <form  id="bwlistEdit">
+		<fieldset>
+		    <table class="form">
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class="bulk-actions align-left">
+                                <button type="submit" class="button">保存</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+
+		        <tbody>
+		            <tr>
+		                <th>
+            				<label>AC网关ID</label>
+		                </th>
+		                <td>
+		                	<select class="text-input input-small" id="acid" name="bwlist.acid">
+		                		<option value="">--请选择--</option>
+		                		<#list acidList as x>
+		                			<#if x.acid == bwlist.acid>
+		                				<option value="${(x.acid!'')}" selected="selected">${(x.acid!'')}</option>
+		                			<#else>
+		                				<option value="${(x.acid!'')}">${(x.acid!'')}</option>
+		                			</#if>
+		                			
+		                		</#list>
+		                	</select>
+		                	<span class="red">*</span>
+		                </td>
+		            </tr>
+		            
+		            <tr>
+		                <th>
+            				<label>名单类型</label>
+		                </th>
+		                <td>
+		                	<select class="text-input input-small" id="whtype" name="bwlist.whtype">
+		                		<option value="">--请选择--</option>
+		                		<#if bwlist.whtype == 0>
+		                			<option value="0" selected="selected">白名单</option>
+		                			<option value="1">黑名单</option>
+		                		<#else>
+		                			<option value="0">白名单</option>
+		                			<option value="1" selected="selected">黑名单</option>
+		                		</#if>
+		                		
+		                		
+		                	</select>
+		                	<span class="red">*(注：添加修改白名单要重启AC)</span>
+		                </td>
+		            </tr>
+		             <tr>
+		                <th>
+            				<label>名单控制方式</label>
+		                </th>
+		                <td>
+		                    <select class="text-input input-small"  id="controltype" name="bwlist.controltype" >
+		                		<option value="">--请选择--</option>
+		                		<#if bwlist.controltype == 1>
+		                			<option value="1" selected="selected">域名</option>
+		                			<option value="2" >IP地址</option>
+		                			<option value="3" >Mac地址</option>
+		                		<#elseif bwlist.controltype == 2>
+		                			<option value="1" >域名</option>
+		                			<option value="2" selected="selected">IP地址</option>
+		                			<option value="3" >Mac地址</option>
+		                		<#else>
+		                			<option value="1" >域名</option>
+		                			<option value="2" >IP地址</option>
+		                			<option value="3" selected="selected">Mac地址</option>
+		                		</#if>
+		                		
+		                		
+		                	</select>
+		                	<span class="red">*</span>
+		                </td>
+		            </tr>
+		             <tr>
+		                <th>
+            				<label>名单的值</label>
+		                </th>
+		                <td>
+		                    <input class="text-input input-small" id="controlvalue" name="bwlist.controlvalue" value="${(bwlist.controlvalue!'')}"/>
+		                	<span class="red">*</span>
+		                </td>
+		            </tr>
+		            
+                    <tr><td colspan="2"></td></tr>
+	            </tbody>
+            </table>
+        </fieldset>
+        </form>
+	</div>
+	<!-- End .content-box-content -->
+</div>
+<!-- End #main-content -->
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	// validate signup form on keyup and submit
+	$("#bwlistEdit").validate({
+		rules: {
+			"bwlist.acid": "required",
+			"bwlist.whtype": "required",
+			"bwlist.controltype" : "required",
+			"bwlist.controlvalue" : "required"
+			
+		},
+		messages: {
+			"bwlist.acid" : "请选择AC网关ID !",
+			"bwlist.whtype" : "请选择名单类型 !",
+			"bwlist.controltype" : "请选择名单控制方式 !",
+			"bwlist.controlvalue" : "请输入名单值 !",
+		},
+		submitHandler : function(form) { //通过之后回调 
+			var param = $("#bwlistEdit").serialize();
+			$.ajax({
+				url : "bwlist/editBwlist/${bwlist.id!''}",
+				type : "post",
+				dataType : "json",
+				data : param,
+				success : function(data) {
+					if(data.infoMsg){
+						$('#info').show();
+						$('#infoMsg').html(data.infoMsg);
+					}else{
+						window.location.href = "${CPATH}/bwlist";
+					}
+					
+
+				}
+			});
+		},
+		invalidHandler : function(form, validator) { //不通过回调 
+			return false;
+		}
+	});
+
+	
+});
+
+</script>
+</@layout>

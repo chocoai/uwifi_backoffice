@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>新增或删除表格文本框</title>
+<meta http-equiv="content-type" content="text/html;charset=gb2312">
+<script type="text/javascript" src="/uwifi/resources/scripts/jquery.js"></script> 
+<script type="text/javascript">
+$(document).ready(function(){
+    /*添加行数据*/
+   
+    	 $(".J_add").click(function(){
+    		 if($('tr.after_tr').size()<5){
+    	        var this_html=$(this).parents("tr").html();//当前新增所在行的html
+    	        var after_tr=$(this).parents("tr").after("<tr class='after_tr'></tr>");//向当前行插入一行tr
+    	        var after_tr=$(".after_tr");//选择插入行的类名
+    	        after_tr.html(this_html);//把变量this_html内容插入到创建后的空tr中
+    	        after_tr.find(".J_add").addClass("J_del").removeClass("J_add").text("删除");//把原来新增操作改成删除操作，并且把它的类名改成J_del
+    	 	}else{
+    	    	alert("最多只能添加5个");
+    	    }
+    	 });
+    
+   
+    $(document).on("click", ".J_del" , function () {
+	    $(this).parents("tr").remove();
+	});
+})
+</script>
+</head>
+<body>
+<table>
+  <thead><tr><td>SKU</td><td>赠送数量</td><td>单价</td><td>总价</td><td>操作</td></tr></thead>
+  <tbody>
+    <tr><td><input type="text"></td><td><a class="J_add">新增</a></td></tr>
+  </tbody>
+</table>
+</body>
+</html>

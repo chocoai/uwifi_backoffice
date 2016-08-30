@@ -1,0 +1,271 @@
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">路由参数配置</h4>
+</div>
+<div class="modal-body">
+<div class="row">
+<div class="col-sm-12">
+	<form class="form-horizontal" id="ac-config" role="form" method="post" action="acconfig/editAcconfig/${(acconfig.acid!'')}">
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">路由器编号</label>
+			<div class="col-sm-8">
+				<p class="middle">${acid!''}</p>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">最大用户数</label>
+			<div class="col-sm-3">
+				<input type="text" name="acconfig.maxuser"
+					value="${acconfig.maxuser!''}" class="form-control input-small no-padding-right">
+			</div>
+			<label class="col-sm-6"><span style="margin-left:-35px;">范围：1-50</span></label>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">客户端超时(分钟)</label>
+			<div class="col-sm-3">
+				<input type="text" name="acconfig.clienttimeout"
+					value="${acconfig.clienttimeout!''}" class="form-control input-small no-padding-right">
+			</div>
+			<label class="col-sm-6"><span style="margin-left:-35px;">范围：1-99</span></label>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">终端带宽（kbt）</label>
+			<div class="col-sm-4">
+				<input type="text" name="acconfig.clientspeed" value="${acconfig.clientspeed!''}"
+					 class="form-control input-medium no-padding-right">
+			</div>
+			<label class="col-sm-5"><span style="margin-left:-35px;">1kB/s = 8kbt/s</span></label>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">上行总带宽（kbt）</label>
+			<div class="col-sm-4">
+				<input type="text" name="acconfig.totalupload" value="${acconfig.totalupload!''}"
+					 class="form-control input-medium no-padding-right">
+			</div>
+			<label class="col-sm-5"><span style="margin-left:-35px;">1kB/s = 8kbt/s</span></label>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">下行总带宽（kbt）</label>
+			<div class="col-sm-4">
+				<input type="text" name="acconfig.totaldownload" value="${acconfig.totaldownload!''}"
+					 class="form-control input-medium no-padding-right">
+			</div>
+			<label class="col-sm-5"><span style="margin-left:-35px;">1kB/s = 8kbt/s</span></label>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">网关内网IP</label>
+			<div class="col-sm-4">
+				<input type="text" name="acconfig.gatewayaddress" value="${acconfig.gatewayaddress!''}"
+					 class="form-control input-medium">
+			</div>
+			<label class="col-sm-5"><span style="margin-left:-35px;">例如：192.168.5.100</span></label>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">检查间隔(秒)</label>
+			<div class="col-sm-4">
+				<input type="text" name="acconfig.checkinterval"
+					value="${acconfig.checkinterval!''}" class="form-control input-medium no-padding-right">
+			</div>
+			<label class="col-sm-5"><span style="margin-left:-35px;">范围：1-3600</span></label>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">DHCP租约时间(分钟)</label>
+			<div class="col-sm-4">
+				<input type="text" name="acconfig.dhcplease"
+					value="${acconfig.dhcplease!''}" class="form-control input-medium no-padding-right">
+			</div>
+			<label class="col-sm-5"><span style="margin-left:-35px;">范围：1-1440</span></label>
+		</div>
+		<input type="hidden" name="acconfig.acid" value="${acid!''}"/>
+	</form>
+	
+</div>
+</div>
+</div>
+
+<div class="modal-footer">
+	<button data-dismiss="modal" class="btn btn-sm pull-left">
+		<i class="ace-icon fa fa-times"></i> 取消
+	</button>
+	<button type="button" class="btn btn-sm btn-warning" id="clear_btn"><i class="ace-icon fa fa-undo"></i>重置</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button onclick="form_submit();return false"
+		class="btn btn-sm btn-primary">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#ac-config').bootstrapValidator({
+			message: '输入不正确',
+			feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields: {
+	            'acconfig.maxuser': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入最大用户数!'
+	                    },
+	                    regexp: {
+	                        regexp: "^[0-9]*$",
+	                        message: '请输入正整数!'
+	                    },
+	                    lessThan: {
+	                        value: 50,
+	                        inclusive: true,
+	                        message: '最大不超过50!'
+	                    }
+	                }
+	            },
+	            'acconfig.clientspeed': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入终端带宽!'
+	                    },
+	                    regexp: {
+	                        regexp: "^[0-9]*$",
+	                        message: '请输入正整数!'
+	                    },
+	                    lessThan: {
+	                        value: 819200,
+	                        inclusive: true,
+	                        message: '最大不超过819200'
+	                    }
+	                    
+	                }
+	            },
+	            'acconfig.totalupload': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入上行总带宽!'
+	                    },
+	                    regexp: {
+	                        regexp: "^[0-9]*$",
+	                        message: '请输入正整数!'
+	                    },
+	                    lessThan: {
+	                        value: 819200,
+	                        inclusive: true,
+	                        message: '最大不超过819200'
+	                    }
+	                    
+	                }
+	            },
+	            'acconfig.totaldownload': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入下行总带宽!'
+	                    },
+	                    regexp: {
+	                        regexp: "^[0-9]*$",
+	                        message: '请输入正整数!'
+	                    },
+	                    lessThan: {
+	                        value: 819200,
+	                        inclusive: true,
+	                        message: '最大不超过819200'
+	                    }
+	                    
+	                }
+	            },
+	            'acconfig.gatewayaddress': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入网关内网IP!'
+	                    },
+	                    regexp: {
+	                        regexp: /^192\.168(\.([2][0-4]\d|[2][5][0-5]|[01]?\d?\d)){2}$/,
+	                        message: '请输入内网IP!'
+	                    }
+	                }
+	            },
+	            'acconfig.clienttimeout': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入超时时间!'
+	                    },
+	                    regexp: {
+	                        regexp: "^[0-9]*$",
+	                        message: '请输入正整数!'
+	                    },
+	                    lessThan: {
+	                        value: 99,
+	                        inclusive: true,
+	                        message: '最大不超过99'
+	                    }
+	                }
+	            },
+	            'acconfig.checkinterval': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入检查间隔!'
+	                    },
+	                    regexp: {
+	                        regexp: "^[0-9]*$",
+	                        message: '请输入正整数!'
+	                    },
+	                    lessThan: {
+	                        value: 3600,
+	                        inclusive: true,
+	                        message: '最大不超过3600'
+	                    }
+	                }
+	            },
+	            'acconfig.dhcplease': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入DHCP租约时间!'
+	                    },
+	                    regexp: {
+	                        regexp: "^[0-9]*$",
+	                        message: '请输入正整数!'
+	                    },
+	                    lessThan: {
+	                        value: 1440,
+	                        inclusive: true,
+	                        message: '最大不超过1440'
+	                    }
+	                }
+	            }
+	        }
+		});
+		
+		$("#clear_btn").click(function() {
+			$('#ac-config').data('bootstrapValidator').resetForm(true);
+			
+		});
+	});
+	function form_submit(){
+		var form = $("#modal form");
+		form.bootstrapValidator('validate');
+		var bv = form.data('bootstrapValidator');
+		
+		if(bv.$invalidFields.size() == 0) {
+			
+			var queryString = form.formSerialize();
+			$.post(
+					"acconfig/editAcconfig/${(acconfig.acid!'')}",
+					queryString,
+					function(data) {
+						if(data.status == "1"){
+							window.location.href="${CPATH}/businessinfo/${currentPage!'1'}-test";
+						}else{
+							$("#modal .modal-body .alert").remove();
+							$("#modal .modal-body").prepend('<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'+data.msg+'</div>');
+						}
+					},
+				"json"
+			);
+		}
+	}
+</script>

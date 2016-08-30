@@ -1,0 +1,98 @@
+<#include "/admin/layout/layout_shop.html" /> 
+<@layout>
+<!-- Page Head -->
+<div class="page-header">
+	<h1>
+		<p>
+		 认证页面 <small> <i
+			class="ace-icon fa fa-angle-double-right"></i> 模板选择
+		</small>
+		</p>
+	</h1>
+</div>
+
+<div class="content-box-content">
+    <form name="form1" action="templetManage/updateAuthPagetemplet" method="post">
+    <input type="hidden" name="businessid" value="${(businessid!'')}"/>
+    <input type="hidden" name="acid" value="${(acid!'')}"/>
+    <table class="list" border="0" align="center" width="100%">
+		<tfoot>
+			<#if authModuleManage.getTotalRow() == 0 >
+			<tr>
+				<td colspan="8">
+		        	<div class="notification attention png_bg">
+                      	<div>还没有模板信息</div>
+                	</div>
+    			</td>
+			</tr>
+			</#if>
+			<tr style="display:none;">
+				<td colspan="8">
+				<button onclick="form_submit();return false" class="btn btn-sm btn-primary pull-left">
+					<i class="ace-icon fa fa-check"></i> 保存
+				</button>
+				</td>
+			</tr>
+		</tfoot>
+		<tbody>
+			
+			<#list authModuleManage.getList() as x>
+				<#if x_index % 3 == 0>
+					<tr>
+				</#if>
+				<td align="center">
+				<a href="javascript:void(0);" onclick="radioChange('aa_${x_index+1}');return false"><img alt="" title="<#if x.id == 1>一键上网、手机短信认证、微信认证<#elseif x.id == 10>多种方式认证<#elseif x.id == 11>多种方式认证</#if>" src="${(uploadPath!'')}/${(x.cover!'')}" width="200px" /></a><br/>
+					<#if authid?exists && x.id == authid>
+					<div class="radio">
+						<label onchange="form_submit();return false">
+							<input id="aa_${x_index+1}" name="authid" type="radio" class="ace" value="${(x.id!'')}" checked="checked"/>
+							<span class="lbl">${(x.displayname!'')}</span>
+						</label>
+					</div>
+<!-- 					<font class="red">支持的的认证方式：<#if x.id == 1> -->
+<!-- 							       一键上网、手机短信认证、微信认证 -->
+<!-- 							   <#elseif x.id == 10> -->
+<!-- 							      多种方式认证 -->
+<!-- 							   <#elseif x.id == 11> -->
+<!-- 							     多种方式认证 -->
+<!-- 							   </#if> -->
+<!-- 					</font> -->
+					<#else>
+					<div class="radio">
+						<label onchange="form_submit();return false">
+							<input id="aa_${x_index+1}" name="authid" type="radio" class="ace" value="${(x.id!'')}" />
+							<span class="lbl">${(x.displayname!'')}</span>
+						</label>
+					</div>
+<!-- 					<font class="red">支持的的认证方式：<#if x.id == 1> -->
+<!-- 							       一键上网、手机短信认证、微信认证 -->
+<!-- 							   <#elseif x.id == 10> -->
+<!-- 							      多种方式认证 -->
+<!-- 							   <#elseif x.id == 11> -->
+<!-- 							      多种方式认证 -->
+<!-- 							   </#if> -->
+<!-- 					</font> -->
+					</#if>
+				</td>
+			   <#if x_index % 3 == 2>
+					</tr>
+				</#if>
+			</#list>
+		</tbody>
+	</table>
+	</form>
+</div>
+<!-- End .content-box-content -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+function form_submit(){
+	form1.submit();
+}
+function radioChange(obj){
+	$("#"+obj).removeAttr("checked");
+	$("#"+obj).prop("checked",true);
+	form1.submit();
+}
+</script>
+</@layout>

@@ -1,0 +1,44 @@
+* {
+    font-family: "Microsoft Yahei";
+}
+.font15 {
+	font-size: 15px;
+}
+.font20 {
+	font-size: 20px;
+}
+.font30 {
+	font-size: 30px;
+}
+.font40 {
+	font-size: 40px;
+}
+.font50 {
+	font-size: 50px;
+}
+
+.font60 {
+	font-size: 60px;
+}
+
+.font70 {
+	font-size: 70px;
+}
+
+.font80 {
+	font-size: 80px;
+}
+
+.font90 {
+	font-size: 90px;
+}
+input[type=checkbox].ace.ace-switch+.lbl::before{
+	content:"开\a0\a0\a0\a0\a0\a0\a0关";
+}
+@media screen and (-webkit-min-device-pixel-ratio:0){
+	input[type=checkbox].ace.ace-switch+.lbl::before{
+		content:"开\a0\a0\a0关";
+	}
+}
+
+

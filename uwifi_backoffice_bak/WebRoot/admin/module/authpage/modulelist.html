@@ -1,0 +1,67 @@
+<#include "/admin/layout/window.html" />
+<@layout>   
+    <div class="content-box">
+		<div class="content-box-header">
+			<h3>认证页面模板</h3>
+		</div>
+	 <!-- End .content-box-header -->
+	<div class="content-box-content">
+		<#if errorMsg??>
+        <div class="notification error png_bg">
+        	<div>${errorMsg!""}</div>
+            <a class="close" href="#"><img alt="close" title="Close this notification" src="resources/images/icons/cross_grey_small.png"></a>
+        </div>
+        </#if>
+        <#if infoMsg??>
+        <div class="notification information png_bg">
+        	<div>${infoMsg!""}</div>
+            <a class="close" href="#"><img alt="close" title="Close this notification" src="resources/images/icons/cross_grey_small.png"></a>
+        </div>
+        </#if>
+	    <form action="module/updateAuthPagetemplet" method="post">
+	    <input type="hidden" name="businessid" value="${(businessid!'')}"/>
+	    <input type="hidden" name="acid" value="${(acid!'')}"/>
+	    <table class="list">
+			<tfoot>
+				<#if authModuleManage.getTotalRow() == 0 >
+				<tr>
+					<td colspan="8">
+   				        <div class="notification attention png_bg">
+                           	<div>还没有模板信息</div>
+                           </div>
+	    			</td>
+				</tr>
+				</#if>
+				<tr>
+					<td colspan="8">
+					<button type="submit" class="button" >保存</button>
+<!-- 					<a href="" class="button">取消</a> -->
+						<div class="clear"></div>
+					</td>
+				</tr>
+			</tfoot>
+			<tbody>
+				
+				<#list authModuleManage.getList() as x>
+					<#if x_index % 3 == 0>
+						<tr>
+					</#if>
+					<td>
+					<img alt="" src="${(uploadPath!'')}/${(x.cover!'')}" width="200px" /><br/>
+					<#if authid?exists && x.id == authid>
+					<div style="margin-left: 50px; "><input type="radio" name="authid" value="${(x.id!'')}" checked="checked" />${(x.displayname!'')}</div></td>
+					<#else>
+					<div style="margin-left: 50px; "><input type="radio" name="authid" value="${(x.id!'')}"  />${(x.displayname!'')}</div></td>
+					</#if>
+				   <#if x_index % 3 == 2>
+						</tr>
+					</#if>
+				</#list>
+			</tbody>
+		</table>
+		</form>
+	</div>
+	<!-- End .content-box-content -->
+</div>
+<!-- End #main-content -->
+</@layout>

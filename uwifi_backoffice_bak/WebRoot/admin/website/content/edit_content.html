@@ -1,0 +1,184 @@
+<#include "/admin/layout/layout_shop.html" /> <@layout>
+
+<div class="page-header">
+	<h1>
+	  <p>
+		     广告页 <i
+			class="ace-icon fa fa-angle-double-right"></i> 内容管理 <small> <i
+			class="ace-icon fa fa-angle-double-right"></i> 编辑文章内容
+		</small>
+	  </p>
+	</h1>
+</div>
+<form class="form-horizontal" id="edit-content-form" role="form" action="content/editContent/${(currentPage)!''}?id=${(sitecontent.id)!''}" method="post">
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 文章所属分类  </label>
+
+		<div class="col-sm-9">
+			<select name="sitecontent.classid">
+				<option value="0">--请选择--</option> 
+					<#if classifyList?exists && classifyList.size() != 0 >
+					<option value="${(siteclassify.id!'')}" selected="selected">${(siteclassify.name!"")}</option> 
+						<#list classifyList as x>
+							<option value="${(x.id!'')}">${(x.name!"")}</option> 
+						</#list>
+					</#if>
+					
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 标题  </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="sitecontent.title" class="col-xs-10 col-sm-5" value="${(sitecontent.title)!''}" >
+		</div>
+	</div>
+
+<!-- 	<div class="form-group"> -->
+<!-- 		<label class="col-sm-3 control-label no-padding-right" -->
+<!-- 			for="form-field-1"> 简介  </label> -->
+
+<!-- 		<div class="col-sm-9"> -->
+<!-- 			<textarea class="col-xs-10 col-sm-5"  name="sitecontent.text" rows="4" >${(sitecontent.text)!''}</textarea> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+
+<!-- 	<div class="form-group"> -->
+<!-- 		<label class="col-sm-3 control-label no-padding-right" -->
+<!-- 			for="form-field-1"> 封面图片地址 </label> -->
+			
+<!-- 		<div class="col-sm-9"> -->
+<!-- 			<input type="text" name="sitecontent.pic" id="cover" class="col-xs-10 col-sm-5" value="${(sitecontent.pic)!''}" > -->
+                                
+<!--              <div id="upload-container" class="btn btn-sm btn-primary"></div> -->
+<!--              <img id="showload" src="resources/images/loading.gif" style="display: none"> -->
+<!--              <p id="prev" style="display: none"> -->
+<!--                  <img src="" width="180px" height="120px" /> -->
+<!--                  <a style="cursor:pointer;">删除</a> -->
+<!--              </p> -->
+<!-- 		</div> -->
+
+<!-- 	</div> -->
+
+<!-- 	<div class="form-group"> -->
+<!-- 		<label class="col-sm-3 control-label no-padding-right" -->
+<!-- 			for="form-field-1"> 详细页是否显示封面  </label> -->
+
+<!-- 		<div class="col-sm-9"> -->
+<!-- 			<#if (sitecontent.showpic)?? && sitecontent.showpic == 1> -->
+<!-- 				<input name="sitecontent.showpic" type="radio" value="1" checked="checked"/>是&nbsp;&nbsp; -->
+<!-- 				    <input name="sitecontent.showpic" type="radio" value="0" />否 -->
+<!-- 				<#else> -->
+<!-- 				<input name="sitecontent.showpic" type="radio" value="1" />是&nbsp;&nbsp; -->
+<!-- 				    <input name="sitecontent.showpic" type="radio" value="0" checked="checked"/>否 -->
+<!-- 			</#if> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 图文详细页内容</label>
+
+		<div class="col-sm-9">
+			<textarea class="col-xs-10 col-sm-5" name="sitecontent.info" rows="4" >${(sitecontent.info)!''}</textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 排序 </label>
+
+		<div class="col-sm-9">
+			<input class="col-xs-10 col-sm-5" type="text" id="sort" value="${(sitecontent.sort)!''}"  name="sitecontent.sort" maxlength="5" style="width:45px;" >
+		</div>
+	</div>
+
+	<div class="space-4"></div>
+
+
+	<div class="clearfix form-actions">
+		<div class="col-md-offset-3 col-md-9">
+			<button class="btn btn-info" type="submit">
+				<i class="ace-icon fa fa-check bigger-110"></i> 提交
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn" type="button" name="clear" id="clear_btn" >
+				<i class="ace-icon fa fa-undo bigger-110"></i> 重置
+			</button>
+		</div>
+	</div>
+
+
+</form>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('textarea[name="sitecontent.info"]', {
+		allowFileManager : true,
+		afterBlur: function(){this.sync();}
+	});
+	K('button[name=clear]').click(function(e) {
+		editor.html('');
+	});
+
+	
+});
+
+$(document).ready(function(){
+	
+////输入验证
+	 // validate signup form on keyup and submit
+		$("#edit-content-form").validate({
+			rules: {
+				"sitecontent.classid" : {
+					required : true
+				},
+				"sitecontent.title" : {
+					required : true,
+					maxlength : 50
+				},
+				"sitecontent.sort" : {
+					required : true,
+					digits: true,
+					maxlength : 5
+				}
+				
+				
+			},
+			messages: {
+				"sitecontent.classid" : {
+					required : "请选择所属分类 !"
+				},
+				"sitecontent.title" : {
+					required : "请输入内容标题 !",
+					maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+				},
+				"sitecontent.sort" : {
+					required : "请输入排序 !",
+					digits: "只能输入整数 !",
+					maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+				}
+				
+				
+			}
+		});
+	 
+	    $("#clear_btn").click(function() {
+			
+			$("input[name='sitecontent.title']").val('');
+			$("input[name='sitecontent.info']").val('');
+			$("input[name='sitecontent.sort']").val(''); 
+		    	    
+				
+			
+		});
+	
+});
+
+</script>
+</@layout>

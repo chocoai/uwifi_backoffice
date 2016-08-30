@@ -1,0 +1,245 @@
+<#include "/admin/layout/layout_shop.html" /> <@layout>
+
+<div class="page-header">
+	<h1>
+	  <p>
+		广告页面 <i
+			class="ace-icon fa fa-angle-double-right"></i> 轮播背景图 <small> <i
+			class="ace-icon fa fa-angle-double-right"></i> 编辑背景图
+		</small>
+	  </p>
+	</h1>
+</div>
+<form class="form-horizontal" role="form" id="edit-carousel-form" action="sitecarousel/editCarousel?id=${(siteflash.id!'')}&pageNo=${(currentPage)!'1'}" method="post">
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 所属店铺  </label>
+
+		<label class="col-sm-3"
+			for="form-field-1"> ${(businessinfo.busname)!''}</label>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 背景图描述  </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="siteflash.info" class="col-xs-10 col-sm-5" value="${(siteflash.info)!''}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 背景图图片  </label>
+			
+		<div class="col-sm-9">
+		 <div id="upload-container" class="btn btn-sm btn-primary"></div>
+             <img id="showload" src="resources/images/loading.gif" style="display: none">
+             <span class="red">* 只能上传(jpg,jpeg,gif,png)格式的图片</span>
+			<input type="text" name="siteflash.img" id="cover" readonly="readonly" class="col-xs-10 col-sm-5" value="${(siteflash.img)!''}">
+                                
+             <p id="prev" style="display: none">
+                 <img src="" width="120px" height="100px" />
+                 <a style="cursor:pointer;">删除</a>
+             </p>
+		</div>
+
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 排序 </label>
+
+		<div class="col-sm-9">
+			<input type="text"  name="siteflash.sort" class="col-xs-10 col-sm-5" maxlength="5" style="width:45px;" value="${(siteflash.sort)!''}" >
+		</div>
+	</div>
+
+	<div class="space-4"></div>
+
+
+	<div class="clearfix form-actions">
+		<div class="col-md-offset-3 col-md-9">
+			<button class="btn btn-info" type="submit">
+				<i class="ace-icon fa fa-check bigger-110"></i> 提交
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn" type="button" id="clear_btn">
+				<i class="ace-icon fa fa-undo bigger-110"></i> 重置
+			</button>
+		</div>
+	</div>
+
+
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	var apiUrl = '';
+
+	 if ($('#cover').val())
+	    {
+	        $('#cover').focus();
+	        var url = "${(uploadPath!"")}" + $('#cover').val();
+		    $('#prev').find('img').attr('src', url).end().show();
+	    }
+
+	/**
+     * 上传控件
+     */
+    var uploader = new qq.FileUploader({
+        element: $('#upload-container')[0],
+        action: 'site/loadFileImage',
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+        sizeLimit: 1024*1024*20,
+        params: {
+        },
+        onSubmit: function(id, fileName)
+        {
+            $('#showload').show();
+            return true;
+        },
+        onComplete: function(id, fileName, responseJSON)
+        {
+            setTimeout(function(){
+                $('#showload').hide();
+            }, 1000);
+
+            if (responseJSON.error != undefined)
+            {
+                return false;
+            }
+
+            setTimeout(function(){
+                $('#cover').val(responseJSON.fileId);  //改
+                $('#cover').focus();
+                $('#prev').find('img').attr('src', '${(uploadPath!"")}' + responseJSON.fileId).end().show();
+            }, 1000);
+
+            return true;
+        },
+        showMessage: function(message)
+        {
+            doAlert(message);
+        }
+    });
+
+
+    /**
+     * 删除预览图
+     */
+    $('#prev a').bind('click', function(){
+        var url = $('#cover').val();
+
+        if (!url)
+        {
+            return false;
+        }
+
+        /* 删除网络图片 */
+        if (url.indexOf('http') === 0)
+        {
+            $('#cover').val('');
+            $('#prev').hide();
+        }
+
+        /* 删除本地图片 */
+        else
+        {
+        	bootbox.confirm('您确定要删除图片吗？', function(res){
+        		if(res == true){
+        			 $.ajax({
+                      url: 'site/deletePicture',
+                      data: 'type=100&path=' + url,
+                      success: function(data){
+                          if (data == 0)
+                          {
+                              $('#cover').val('');
+                              $('#prev').hide();
+                          }
+                          else
+                          {
+                              alert('删除图片失败。');
+                          }
+                      }
+                  });
+        		}
+            });
+        }
+
+        return false;
+    });
+
+    /**
+     * 图片加载失败
+     */
+    $('#prev img').onerror = function()
+    {
+        $('#prev img').attr('src', 'resources/images/404.jpg')
+    }
+    
+////输入验证
+    // validate signup form on keyup and submit
+   	$("#edit-carousel-form").validate({
+   		rules: {
+   			"siteflash.info" : {
+   				required : true,
+   				maxlength : 100
+   			},
+   			"siteflash.img": "required",
+   			"siteflash.sort" : {
+   				required : true,
+   				digits: true,
+   				maxlength : 5
+   			}
+   			
+   			
+   		},
+   		messages: {
+   			"siteflash.info" : {
+   				required : "请输入背景图描述 !",
+   				maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+   			},
+   			"siteflash.img" : "请上传图片!",
+   			"siteflash.sort" : {
+   				required : "请输入排序 !",
+   				digits: "只能输入整数 !",
+   				maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+   			}
+   			
+   			
+   		}
+   	});
+    
+       $("#clear_btn").click(function() {
+    	   
+   		$("input[name='siteflash.info']").val('');
+   		$("input[name='siteflash.img']").val('');
+   		$("input[name='siteflash.url']").val('');
+   		$("input[name='siteflash.sort']").val('');
+   		
+   		//删除图片
+   		$.ajax({
+               url: 'site/deletePicture',
+               data: 'type=100&path=' + url,
+               success: function(data){
+                   if (data == 0)
+                   {
+                       $('#cover').val('');
+                       $('#prev').hide();
+                   }
+                   else
+                   {
+                       alert('删除图片失败。');
+                   }
+               }
+           });
+   		
+   		
+   	});
+	
+});
+
+</script>
+</script>
+</@layout>

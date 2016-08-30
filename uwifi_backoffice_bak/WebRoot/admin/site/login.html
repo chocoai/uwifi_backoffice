@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="${CPATH}/" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>UWiFi 广告运营管理平台</title>
+<!--                       CSS                       -->
+<!-- Reset Stylesheet -->
+<link rel="stylesheet" href="resources/css/reset.css" type="text/css" media="screen" />
+<!-- Main Stylesheet -->
+<link rel="stylesheet" href="resources/css/style.css" type="text/css" media="screen" />
+<!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+<link rel="stylesheet" href="resources/css/invalid.css" type="text/css" media="screen" />
+<!--                       Javascripts                       -->
+<!-- jQuery -->
+<script type="text/javascript" src="resources/scripts/jquery.js"></script>
+<script type="text/javascript" src="resources/scripts/artdialog/jquery.artDialog.js?skin=default"></script>
+<!-- jQuery Configuration -->
+<script type="text/javascript" src="resources/scripts/common.js"></script>
+</head>
+<body id="login">
+<div id="login-wrapper" class="png_bg">
+  <div id="login-top">
+    <h1></h1>
+    <!-- Logo (221px width) -->
+    <img id="logo" src="http://218.23.36.213:8002/group1/M00/00/00/CgAlA1PHjP2AS0B2AAASaSnJoKc769.png" alt="Wass平台一期" /> </div>
+  <!-- End #logn-top -->
+  <div id="login-content">
+    <form action="${CPATH}/site/login"  method="post">
+      <div class="notification attention png_bg">
+      	<#if attentionMsg??>
+        <div>${attentionMsg!""}</div>
+        </#if>
+      </div>
+      <div class="notification error png_bg">
+      	<#if errorMsg??>
+        <div>${errorMsg!""}</div>
+        </#if>
+      </div>
+      <p>
+        <label>用户名</label>
+        <input class="text-input" type="text" name="username"/>
+      </p>
+      <div class="clear"></div>
+      <p>
+        <label>密码</label>
+        <input class="text-input" type="password" name="password"/>
+      </p>
+      <div class="clear"></div>
+      <!-- 
+      <p id="remember-password">
+        <input type="checkbox" name="rememberMe"/>
+        记住我</p>
+      <div class="clear"></div>
+         -->
+      <p>
+        <input class="button" type="submit" value="登录" />
+      </p>
+    </form>
+  </div>
+  <!-- End #login-content -->
+</div>
+<!-- End #login-wrapper -->
+</body>
+</html>

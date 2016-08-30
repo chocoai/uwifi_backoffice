@@ -1,0 +1,223 @@
+<#include "/admin/layout/layout_new.html" /> <@layout>
+<!-- Main Content Section with everything -->
+<!-- Page Head -->
+<style>
+<!--
+	table {
+		table-layout:fixed
+	}
+	td {
+		word-break : break-all; overflow:hidden; 
+	}
+-->
+</style>
+<div class="page-header">
+	<h1>
+		<p>我的店铺 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+			店铺一览
+		</small> <p>
+	</h1>
+</div>
+<!-- PAGE CONTENT BEGINS -->
+<div class="col-sm-12 no-padding">
+	<div class="tabbable">
+		<ul class="nav nav-tabs" id="myTab">
+			<li class="${(isHomeActive)?string('active','')}" id="busli"><a data-toggle="tab" href="#home"> 已创建的店铺
+			</a></li>
+
+			<li class="${(isHomeActive)?string('','active')}" id="actli"><a data-toggle="tab" href="#aclist"> 使用中的路由器 </a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div id="home" class="tab-pane fade ${(isHomeActive)?string('active in','')} ">
+				<div class="row">
+					<div class="well well-sm col-xs-12">
+						<div class="col-sm-8">
+							<a class="btn btn-info btn-sm" href="businessinfo/addBusinessinfo" data-target="#modal" data-toggle="modal">
+								<i class="ace-icon fa fa-building align-top bigger-110"></i>
+								添加新店铺
+							</a>
+						</div>
+						<div class="col-sm-4">
+							<form action="businessinfo" method="post" id="busFrm">
+								<div class="input-group">
+									<input type="text" placeholder="请输入店铺名称"
+										class="form-control search-query" name="busname1" size="60"
+										value="${(busname1!'')}"> <span class="input-group-btn">
+										<input type="hidden" name="searchType" value="1">
+										<button class="btn btn-purple btn-sm" type="submit">
+											查询 <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+										</button>
+									</span>
+								</div>
+							</form>
+						</div>
+					</div>
+
+				</div>
+
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th colspan="2">店铺名称</th>
+							<th>联系人</th>
+							<th>联系方式</th>
+							<th class="center">已有路由器</th>
+							<th class="center">操作</th>
+						</tr>
+					</thead>
+
+					<#if businessinfoPage.getList().size() &gt; 0>
+					<tbody>
+						<#list businessinfoPage.getList() as x>
+						<tr>
+							<td>${(x.busname!"")}</td>
+							<td><a href="businessinfo/editShop?businessid=${(x.id!'')}"  class="btn btn-xs btn-warning">
+									<i class="ace-icon fa fa-building align-top"></i> 店铺装修
+								</a></td>
+							<td>${(x.person!"")}</td>
+							<td>${(x.phone!"")}</td>
+							<td class="center"><span
+								class="label label-sm label-success">${(x.count!'0')}台</span></td>
+							<td class="center">
+								<div class="hidden-sm hidden-xs action-buttons">
+									<a class="green" href="businessinfo/editBusinessinfo/${x.id}-${(businessinfoPage.pageNumber)!'1'}-${(busname1!'')}" title="编辑" data-target="#modal" data-toggle="modal"> <i
+										class="ace-icon fa fa-pencil bigger-130"></i>
+									</a> <a class="delete red" href="${CPATH}/businessinfo/delete/${x.id}-${(businessinfoPage.pageNumber)!'1'}-${(busname1!'')}" title="您确定要删除吗？"> <i
+										class="ace-icon fa fa-trash-o bigger-130"></i>
+									</a>
+								</div>
+							</td>
+						</tr>
+						</#list>
+					</tbody>
+					<#else>
+					<tfoot>
+						<tr>
+							<td colspan="6" class="align-center">
+								<p class="font20 bolder well lighter red">您还没有创建<#if searchType = '1' >该</#if>店铺，马上<a class="" href="businessinfo/addBusinessinfo" data-target="#modal" data-toggle="modal">添加</a></p>
+							</td>
+						<tr>
+					</tfoot>
+					</#if>
+				</table>
+				
+				<#if businessinfoPage.getList().size() &gt; 0>
+				<div class="row">
+					<#include "/admin/layout/_paginateBySearch.html" />
+	<@paginate currentPage=businessinfoPage.pageNumber totalPage=businessinfoPage.totalPage actionUrl="${CPATH}/businessinfo/" />
+
+				</div>
+				</#if>
+			</div>
+			
+			<div id="aclist" class="tab-pane fade ${(isHomeActive)?string('','in active')}">
+				<div class="row">
+					<div class="well well-sm col-xs-12">
+						<div class="col-sm-3">
+							<a class="btn btn-success btn-sm" href="acinfo/addAcinfo" data-target="#modal" data-toggle="modal">
+								<i class="ace-icon fa fa-wifi align-top bigger-110"></i> 添加新路由
+							</a>
+						</div>
+						<form action="businessinfo" method="post" id="actFrm">
+						<div class="col-sm-3">
+							<input type="text" placeholder="请输入所属店铺名称"
+										class="form-control search-query" name="busname2" size="60"
+										value="${(busname2!'')}"> 
+						</div>
+						<div class="col-sm-4">
+							<input type="text" placeholder="请输入设备编号"
+										class="form-control search-query" name="acid" size="60"
+										value="${(acid!'')}"> 	
+						</div>
+						<input type="hidden" name="searchType" value="2">
+						<div class="col-sm-2">
+							<span class="input-group-btn">
+								<button class="btn btn-purple btn-sm" type="submit">
+									查询 <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+								</button>
+							</span>
+						</div>
+						</form>
+					</div>
+
+				</div>
+
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>设备编号</th>
+							<th>所属店铺</th>
+							<th>WiFi信号名称</th>
+							<th class="center">操作</th>
+						</tr>
+					</thead>
+
+					<#if acinfoPage.getList().size() &gt; 0>
+					<tbody>
+						<#list acinfoPage.getList() as x>
+						<tr>
+						
+							<td>${(x.acid!"")}</td>
+							<td>${(x.busname!"")}</td>
+							<td>${(x.eqptssid!"")}</td>
+							<td class="center">
+								<div class="hidden-sm hidden-xs action-buttons">
+									<a class="green" href="acconfig/editAcconfig/${(x.acid!'')}-${(acinfoPage.pageNumber)!'1'}" title="参数配置" data-target="#modal" data-toggle="modal"> <i
+										class="ace-icon fa fa-align-justify bigger-130"></i>
+									</a> 
+									<a class="green" href="acinfo/editAcinfo/${(x.id!'')}-${(acinfoPage.pageNumber)!'1'}-${(busname2!'')}-${(acid!'')}" title="编辑" data-target="#modal" data-toggle="modal"> <i
+										class="ace-icon fa fa-pencil bigger-130"></i>
+									</a> <a class="delete red" href="${CPATH}/acinfo/delete/${(x.id!'')}-${(acinfoPage.pageNumber)!'1'}-${(busname2!'')}-${(acid!'')}" title="您确定要删除吗？"> <i
+										class="ace-icon fa fa-trash-o bigger-130"></i>
+									</a>
+								</div>
+							</td>
+						</tr>
+						</#list>
+					</tbody>
+					<#else>
+					<tfoot>
+						<tr>
+							<td colspan="4" class="align-center">
+								<p class="font20 bolder well lighter red">您还没有<#if searchType = '2' >该</#if>设备，马上<a class="" href="acinfo/addAcinfo" data-target="#modal" data-toggle="modal">添加</a></p>
+							</td>
+						<tr>
+					</tfoot>
+					</#if>
+				</table>
+
+				<#if acinfoPage.getList().size() &gt; 0>
+				<div class="row">
+					<#include "/admin/layout/_paginateBySearch.html" />
+	<@paginate currentPage=acinfoPage.pageNumber totalPage=acinfoPage.totalPage actionUrl="${CPATH}/businessinfo/" urlParas=acPage />
+
+				</div>
+				</#if>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.col -->
+<!-- PAGE CONTENT ENDS -->
+<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+		jQuery(function($) {
+			$('#myTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				if($(e.target).attr('href') == "${CPATH}/businessinfo/#home") drawChartNow();
+			});
+		});
+		
+		function searchForPage(url){
+			var frm = null;
+			var cls = $("#busli").attr("class");
+			if(cls=="active"){
+				frm = $("#busFrm");
+			}else
+				frm = $("#actFrm");
+			
+			frm.attr("action",url);
+			frm.submit();
+		}
+		</script>
+</@layout>

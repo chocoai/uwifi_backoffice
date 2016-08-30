@@ -1,0 +1,250 @@
+<#include "/admin/layout/layout_new.html" /> <@layout>
+<!-- Main Content Section with everything -->
+<!-- Page Head -->
+<div class="page-header">
+	<h1>
+		<p>
+			我的路由</a> <small> <i class="ace-icon fa fa-angle-double-right"></i>
+				上网管理
+			</small>
+		</p>
+	</h1>
+</div>
+
+<!-- PAGE CONTENT BEGINS -->
+<div class="well well-sm col-xs-12">
+	<form class="form-horizontal" role="form" id="search"
+		action="myRouter/importBwlist/${(whtype)!'0'}" method="post">
+		<div class="col-sm-12">
+			<p class="font20 blue bolder">查询指标</p>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right"
+				for="businessid">店铺名称</label>
+			<div class="col-sm-3">
+				<select class="form-control" name="businessid">
+					<option value="0">全部</option> <#list businessinfoList as x>
+					<option value="${(x.id!'')}" ${(x.id=businessid)?string(
+						'selected="selected"','')}>${(x.busname!"")}</option> </#list>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right" for="start">到店时间</label>
+			<div class="col-sm-4 input-daterange input-group"
+				style="padding-left: 12px;">
+					<input type="text" class="input-sm form-control no-padding-right" name="start"
+						value="${start!''}" /> 
+					<span class="input-group-addon"> <i
+						class="fa fa-exchange"></i></span>
+					 <input type="text" class="input-sm form-control no-padding-right" name="end"
+						value="${end!''}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right"
+				for="arriveTimes">到店次数大于</label>
+			<div class="col-sm-3">
+				<input type="text" placeholder=""
+					class="input-mini col-xs-10 col-sm-5" id="arriveTimes"
+					name="arriveTimes" value="${arriveTimes!''}"><span
+					class="help-inline col-xs-12 col-sm-5"> <span class="middle">次</span>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right" for="avagTime">平均上网时长大于</label>
+			<div class="col-sm-3">
+				<input type="text" placeholder=""
+					class="input-mini col-xs-10 col-sm-5" id="avagTime" name="avagTime"
+					value="${avagTime!''}"><span
+					class="help-inline col-xs-12 col-sm-5"> <span class="middle">分钟</span>
+				</span>
+			</div>
+		</div>
+		<div class="clearfix form-actions no-margin-bottom">
+			<div class="col-md-offset-3 col-md-9">
+				<button type="submit" class="btn btn-purple btn-sm">
+					查询 <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="well well-sm col-xs-12 no-margin-bottom">
+	<div class="col-sm-2">
+		<p class="font20 blue bolder">设备列表</p>
+	</div>
+	<div class="col-sm-10">
+		<p>
+			<a class="btn btn-info btn-sm" href="" id="batchInsert"> <i
+				class="ace-icon fa fa-check-square align-top bigger-110"></i>批量添加
+			</a>
+		</p>
+	</div>
+</div>
+
+<div class="col-xs-12 no-padding">
+	<form id="batch" action="myRouter/addBwListByImport" method="post">
+		<table class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th class="center"><label class="position-relative"> <input
+							type="checkbox" class="ace"> <span class="lbl"></span>
+					</label></th>
+					<th class="center">设备MAC地址</th>
+					<th class="center">到店次数</th>
+					<th class="center">平均上网时长(分钟)</th>
+					<th>店铺名称</th>
+					<th>备注</th>
+				</tr>
+			</thead>
+
+			<#if userList.size() &gt; 0>
+			<tbody>
+				<#list userList as map>
+				<tr>
+					<td class="center"><label class="position-relative"> <input
+							type="checkbox" class="ace item" name="bwList"
+							value="${map['mac']};${map['businessid']}"> <span class="lbl"></span>
+					</label></td>
+					<td class="center">${map["mac"]}</td>
+					<td class="center">${map["visitornum"]}</td>
+					<td class="center">${((map["onlinetime"])?number)?int}
+					</td>
+					<td>${(map["busname"]!'没有找到商家')}</td>
+					<td class="center"><input type="text" placeholder=""
+						class="form-control input-sm" name="comment" value=""></td>
+				</tr>
+				</#list>
+			</tbody>
+			<#else>
+			<tfoot>
+				<tr>
+					<td colspan="6" class="align-center">
+						<p class="font20 bolder well lighter red">没有搜索结果，请调整查询条件</p>
+					</td>
+				<tr>
+			</tfoot>
+			</#if>
+		</table>
+	</form>
+</div>
+
+<!-- PAGE CONTENT ENDS -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+	jQuery(function($) {
+
+		//日期选择器
+		$('.input-daterange').datepicker({
+			language : "zh-CN",
+			autoclose : true,
+			format : 'yyyy-mm-dd'
+		});
+		
+		$('#search').bootstrapValidator({
+			message: '输入不正确',
+			feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields: {
+	            'arriveTimes': {
+	                validators: {
+	                	regexp: {
+	                        regexp: /^\+?[1-9][0-9]*$/,
+	                        message: '到点次数时长只能输入数字！'
+	                    },
+	                    greaterThan: {
+	                        value: 1,
+	                        inclusive: true,
+	                        message: '输入必须是整数'
+	                    },
+	                    lessThan: {
+	                        value: 3600,
+	                        inclusive: true,
+	                        message: '最大不超过3600'
+	                    }
+	                }
+	            },
+	            'avagTime': {
+	                validators: {
+	                	regexp: {
+	                        regexp: /^\+?[1-9][0-9]*$/,
+	                        message: '平均上网时长只能输入数字！'
+	                    },
+	                    greaterThan: {
+	                        value: 1,
+	                        inclusive: true,
+	                        message: '输入必须是整数'
+	                    },
+	                    lessThan: {
+	                        value: 3600,
+	                        inclusive: true,
+	                        message: '最大不超过3600'
+	                    }
+	                }
+	            }
+	        }
+		});
+
+		$(document).on(
+				'click',
+				'th input:checkbox',
+				function() {
+					var that = this;
+					$(this).closest('table').find(
+							'tr > td:first-child input:checkbox').each(
+							function() {
+								this.checked = that.checked;
+								$(this).closest('tr').toggleClass('selected');
+							});
+				});
+
+		$('#batchInsert')
+				.on(
+						'click',
+						function(event) {
+							event.preventDefault();
+
+							if ($(".item:checked").size() == 0) {
+
+								bootbox.alert("请选择要批量添加的用户设备！");
+							} else {
+								
+								bootbox.confirm("确定批量添加这些用户设备吗？", function(result) {
+									if(result) {
+										var form = $("#batch");
+										var queryString = form.formSerialize();
+										$
+												.post(
+														"myRouter/addBwListByImport/${whtype!'0'}",
+														queryString,
+														function(data) {
+															if (data.status == "1") {
+																window.location.href = "${CPATH}/myRouter/bwList?whtype=${whtype!'0'}";
+															} else {
+																$(
+																		"#modal .modal-body .alert")
+																		.remove();
+																$("#modal .modal-body")
+																		.prepend(
+																				'<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'
+																						+ data.msg
+																						+ '</div>');
+															}
+														}, "json");
+									}
+								});
+
+
+							}
+						});
+	});
+</script>
+</@layout>

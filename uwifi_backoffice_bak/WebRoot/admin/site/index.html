@@ -1,0 +1,294 @@
+<#include "/admin/layout/layout_new.html" />
+<@layout>
+    <!-- Main Content Section with everything -->
+    <!-- Page Head -->
+    <div class="page-header">
+		<h1>
+			<p>首页
+			<small>
+				<i class="ace-icon fa fa-angle-double-right"></i>
+				我的首页
+			</small></p>
+		</h1>
+	</div>
+						
+	<div class="row">
+		<div class="col-xs-12">
+		<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-sm-8 widget-container-col">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h5 class="widget-title dark bolder">最新消息</h5>
+
+							<!-- <div class="widget-toolbar">
+								<a href="#" data-action="fullscreen" class="orange2">
+									<i class="ace-icon fa fa-expand"></i>
+								</a>
+
+								<a href="#" data-action="reload">
+									<i class="ace-icon fa fa-refresh"></i>
+								</a>
+
+								<a href="#" data-action="collapse">
+									<i class="ace-icon fa fa-chevron-up"></i>
+								</a>
+
+								<a href="#" data-action="close">
+									<i class="ace-icon fa fa-times"></i>
+								</a>
+							</div> -->
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main" style="height:189px">
+								<div class="scrollable" data-size="150">
+									<div class="content">
+										<#list news as map>
+											<div class="well well-sm alert-info">
+												您的店铺“${map["busname"]}”已运行设备${map["lastdays"]}天，累计${map["sumusers"]}客户使用了您的网络，其中到店连续7天以上的客户有${map["sevenday"]}人.
+												<#if map["sevenday"] != "0">
+												他们可能成为您的会员，<a href="dataAnalysis/index">查看他们是谁？</a>
+												</#if>
+											</div>
+											<#if map["outsevenday"] != "0">
+											<div class="well well-sm alert-danger">
+												您的店铺“${map["busname"]}”有${map["outsevenday"]}客户7天以上没有到您的店铺内了，<a href="dataAnalysis/index">看看他们是谁？</a>
+											</div>
+											</#if>
+										</#list>
+										
+										<!-- <div class="alert alert-success">
+											Lorem ipsum dolor sit amet, consectetur adipiscing.
+										</div>
+										<div class="alert">
+											Lorem ipsum dolor sit amet, consectetur adipiscing.
+										</div> -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+			
+			<div class="col-sm-4 widget-container-col">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h5 class="widget-title dark bolder">常用工具</h5>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main" style="height:189px">
+								<p class="center">
+							    	<a class="btn btn-app btn-success" href="businessinfo/addBusinessinfo" data-target="#modal" data-toggle="modal">
+										<i class="ace-icon fa fa-building-o"></i>
+										<span>添加店铺</span>
+									</a>
+									<a class="btn btn-app btn-warning" href="acinfo/addAcinfo" data-target="#modal" data-toggle="modal">
+										<i class="ace-icon fa fa-wifi"></i>
+										<span>添加路由</span>
+									</a>
+								</p>
+							</div>
+							
+						</div>
+					</div>
+			</div>
+    	</div>
+    	
+    	<div class="space-12"></div>
+    	
+    	<div class="row">
+			<div class="col-sm-4 widget-container-col">
+					<div class="widget-box" style="height:189px">
+						<div class="widget-header">
+							<h5 class="widget-title dark bolder">店铺及设备信息</h5>
+							
+							<div class="widget-toolbar">
+								<a href="businessinfo" class="smaller-90">
+									查看详情
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body" style="height:189px">
+							<div class="widget-main align-center no-padding-left no-padding-right" style="height:189px">
+								<div class="col-sm-6 no-padding" >
+									<p class="green">店铺</p>
+									<div style="background:url('resources/css/images/btn_1.png') no-repeat center center;line-height: 135px;">
+                                        <span class="white font20 bolder">${shopCount!'未知'}家</span>
+                                    </div>
+								</div>
+								<div class="col-sm-6 no-padding" >
+									<p class="blue">设备</p>
+									<div style="background:url('resources/css/images/btn_2.png') no-repeat center center;line-height: 135px;">
+                                        <span class="white font20 bolder">${deviceCount!'未知'}台</span>
+                                    </div>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+			
+			<div class="col-sm-4 widget-container-col">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h5 class="widget-title dark bolder">广告统计</h5>
+							
+							<div class="widget-toolbar">
+								<a href="dataAnalysis/advertisement" class="smaller-90">
+									查看详情
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main align-center" style="height:189px">
+								<div class="space-10"></div>
+						    	<p class="middle">
+									<span class="font60 green bolder">${ad!'未知'}</span>次
+								</p>
+								<div class="space-10"></div>
+								<p class="no-margin-bottom">
+									你投放的广告累计曝光${ad}次
+								</p>
+							</div>
+						</div>
+					</div>
+			</div>
+			
+			<div class="col-sm-4 widget-container-col">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h5 class="widget-title dark bolder">客流统计</h5>
+							
+							<div class="widget-toolbar">
+								<a href="dataAnalysis/index" class="smaller-90">
+									查看详情
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main align-center" style="height:189px">
+						    	<div class="space-10"></div>
+						    	<p class="middle">
+									<span class="font60 purple bolder">${yesterdayusers!'未知'}</span>人
+								</p>
+								<div class="space-10"></div>
+								<p class="no-margin-bottom">
+									昨日到店客户${yesterdayusers!'未知'}人
+								</p>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+		
+		<div class="space-12"></div>
+		
+		<div class="row">
+			<div class="col-sm-4 widget-container-col">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h5 class="widget-title dark bolder">顾客在线</h5>
+							
+							<div class="widget-toolbar">
+								<a href="myRouter/onlineUser" class="smaller-90">
+									查看详情
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main align-center no-padding-left no-padding-right"  style="height:189px">
+								<div class="col-sm-6 no-padding" >
+									<p class="orange">实时在线</p>
+									<div style="background:url('resources/css/images/btn_3.png') no-repeat center center;line-height: 135px;">
+                                        <span class="white font20 bolder">${presentUserCount!'未知'}人</span>
+                                    </div>
+								</div>
+								<div class="col-sm-6 no-padding" >
+									<p class="red">最高在线</p>
+									<div style="background:url('resources/css/images/btn_4.png') no-repeat center center;line-height: 135px;">
+                                        <span class="white font20 bolder">${hightestusers!'未知'}人</span>
+                                    </div>
+								</div>
+							
+							</div>
+						</div>
+					</div>
+			</div>
+			
+			<div class="col-sm-4 widget-container-col">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h5 class="widget-title dark bolder">昨日新增顾客</h5>
+							
+							<div class="widget-toolbar">
+								<a href="dataAnalysis/userStatistics" class="smaller-90">
+									查看详情
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main align-center" style="height:189px">
+						    	<div class="space-10"></div>
+						    	<p class="middle">
+									<span class="font60 orange2 bolder">${yesterdaynewusers!'未知'}</span>人
+								</p>
+								<div class="space-10"></div>
+								<p class="no-margin-bottom">
+								有${yesterdaynewusers!'未知'}位客户在一周内第一次到店
+								</p>
+							</div>
+						</div>
+					</div>
+			</div>
+			
+			<div class="col-sm-4 widget-container-col">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h5 class="widget-title dark bolder">超过7天未到店客户</h5>
+							
+							<div class="widget-toolbar">
+								<a href="dataAnalysis/index?flage=sytz" class="smaller-90">
+									查看详情
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main align-center" style="height:189px">
+							    <div class="space-10"></div>
+						    	<p class="middle">
+									<span class="font60 red bolder">${outsevenday!'未知'}</span>人
+								</p>
+								<div class="space-10"></div>
+								<p class="no-margin-bottom">
+								有${outsevenday!'未知'}位客户7天没有到您的店铺内
+								</p>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+    </div><!-- /.row -->
+	<!-- PAGE CONTENT ENDS -->
+	</div><!-- /.col -->
+	
+	<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+		jQuery(function($) {
+			// scrollables
+			$('.scrollable').each(function () {
+				var $this = $(this);
+				$(this).ace_scroll({
+					size: $this.data('size') || 100,
+					//styleClass: 'scroll-left scroll-margin scroll-thin scroll-dark scroll-light no-track scroll-visible'
+				});
+			});
+		});
+		</script>
+</@layout>

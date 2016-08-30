@@ -1,0 +1,120 @@
+<#include "/admin/layout/layout_new.html" /> <@layout>
+<!-- Main Content Section with everything -->
+<!-- Page Head -->
+<div class="page-header">
+	<h1>
+		<p>账号设置<small> <i class="ace-icon fa fa-angle-double-right"></i>
+			我的账号
+		</small></p>
+	</h1>
+</div>
+<!-- PAGE CONTENT BEGINS -->
+<div class="col-sm-12">
+	<form class="form-horizontal" id="ac-config" role="form" method="post" action="sysUser/update">
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">用户名</label>
+			<div class="col-sm-3">
+				<p class="middle">${(userinfo.loginname)!}</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">角色</label>
+			<div class="col-sm-3">
+				${(userinfo.rolecode)?string('管理员','普通用户')}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label no-padding-right">昵称</label>
+			<div class="col-sm-3">
+				<input type="text" name="userinfo.nickname" value="${(userinfo.nickname)!}"
+					placeholder="请输入昵称" class="form-control input-large">
+			</div>
+		</div>
+		<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">密码</label>
+					<div class="col-sm-3">
+						<input type="password" name="userinfo.password" value=""
+							placeholder="" class="form-control input-large">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">密码确认</label>
+					<div class="col-sm-3">
+						<input type="password" name="passwordConfirm" value=""
+							placeholder="" class="form-control input-large">
+					</div>
+				</div>
+				<input type="hidden" name="userinfo.id" value="${userinfo.id}">
+		
+		<div class="clearfix form-actions">
+			<div class="col-md-offset-3 col-md-9">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button type="submit"
+					class="btn btn-sm btn-primary">
+					<i class="ace-icon fa fa-check"></i> 保存
+				</button>
+			</div>
+		</div>
+	</form>
+	
+</div>
+<!-- /.col -->
+<!-- PAGE CONTENT ENDS -->
+<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$('#ac-config').bootstrapValidator({
+				message: '输入不正确',
+				feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        },
+		        fields: {
+		        	'userinfo.nickname' : {
+						validators : {
+							notEmpty : {
+								message : '请输入昵称!'
+							},
+							stringLength : {
+								min : 1,
+								max : 30,
+								message : '输入长度不能超过30个字符'
+							}
+						}
+					},
+		            'userinfo.password' : {
+						validators : {
+							notEmpty : {
+								message : '请输入密码!'
+							},
+							regexp : {
+								regexp : /^[a-zA-Z0-9]+$/,
+								message : '密码只能是数字和字母的组合'
+							},
+							identical : {
+								field : 'passwordConfirm',
+								message : '再输入一次密码确认'
+							}
+						}
+					},
+					'passwordConfirm' : {
+						validators : {
+							notEmpty : {
+								message : '请再次输入密码!'
+							},
+							regexp : {
+								regexp : /^[a-zA-Z0-9]+$/,
+								message : '密码只能是数字和字母的组合'
+							},
+							identical : {
+								field : 'userinfo.password',
+								message : '两次输入的密码不一致'
+							}
+						}
+					}
+		        }
+			});
+		});
+		</script>
+</@layout>

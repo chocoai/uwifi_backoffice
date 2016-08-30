@@ -1,0 +1,492 @@
+<#include "/admin/layout/layout_shop.html" /> 
+<@layout>
+<#if result??>
+	<div class="alert alert-block alert-danger">
+		<button data-dismiss="alert" class="close" type="button">
+			<i class="ace-icon fa fa-times"></i></button>
+			${result.msg!''}
+		</div>
+</#if>
+<div class="page-header">
+	<h1>
+      <p>
+		营销活动<i class="ace-icon fa fa-angle-double-right"></i>${(btnName)!""}
+		<small><i class="ace-icon fa fa-angle-double-right"></i>新增${(btnName)!""}</small>
+	  </p>
+	</h1>
+</div>
+<form class="form-horizontal" id="add-lottery-form" role="form" action="marketingActivity/addCoupon?mark=${(mark)!''}" method="post">
+	
+	<div class="well well-sm">
+	  <p class="font20 blue"> 编辑${(btnName)!""}活动开始内容</p>
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>活动名称 </label>
+		<div class="col-sm-9">
+			<input type="text" name="lottery.title" class="col-xs-6" maxlength="60" value="${(lottery.title)!''}">
+			<span>请不要多于60个字</span>
+		</div>
+	  </div>
+	  
+	  <div class="form-group" <#if mark!='ggk'> style="display:none" </#if> >
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>兑奖信息 </label>
+		<div class="col-sm-9">
+			<input type="text" name="lottery.awardinfo" class="col-xs-9" maxlength="200" value="${(lottery.awardinfo)!''}">
+		</div>
+	  </div>
+	  
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span><#if mark=='ggk'> 中奖提示 <#else> 优惠券介绍</#if> </label>
+		<div class="col-sm-9">
+			<input type="text" name="lottery.sttxt" class="col-xs-9" maxlength="200" value="${(lottery.sttxt)!''}">
+		</div>
+	  </div>
+	  
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>活动时间</label>
+		<div class="col-sm-9">
+		  <div class="input-daterange input-group">
+			<input type="text" class="input-sm form-control" name="startdate" value="${startTime!''}" /> 
+			<span class="input-group-addon"> <i class="fa fa-exchange"></i></span> 
+			<input type="text" class="input-sm form-control" name="enddate" value="${endTime!''}"/>
+		  </div>
+		</div>
+	  </div>
+	  
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>${(btnName)!""}活动说明 </label>
+		<div class="col-sm-9">
+			<textarea type="text" rows="5" cols="6" name="lottery.info" class="col-xs-9" maxlength="200">${(lottery.info)!''}</textarea>
+		</div>
+	  </div>
+	  
+	  <div class="form-group" >
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+		<div class="col-sm-9">
+			备注：换行请输入<font style="color:red">&lt;br/&gt;</font>
+		</div>
+	  </div>
+	  
+	  <div class="form-group" <#if mark=='ggk'> style="display:none" </#if>>
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>优惠券使用说明 </label>
+		<div class="col-sm-9">
+			<input type="text" name="lottery.aginfo" class="col-xs-9" maxlength="200" value="${(lottery.aginfo)!''}">
+		</div>
+	  </div>
+	  
+	  <div class="form-group" style="display:none;">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1">活动开始图片 </label>
+		<div class="col-sm-9">
+			<img width="375" height="220" src="http://wxs.citycloud.org.cn/tpl/Wap/default/common/css/guajiang/images/activity-coupon-start.jpg" alt="150x150">
+			<div>
+				<input style="width:375px" name="starpicurl" value="http://wxs.citycloud.org.cn/tpl/Wap/default/common/css/guajiang/images/activity-coupon-start.jpg" id="pic1">
+			</div>
+			<button onclick="open_upload_page();return false" class="btn btn-sm btn-primary">上传</button>
+			<a href="marketingActivity/imagePreview" data-target="#modal" data-toggle="modal">预览</a>
+		</div>
+	  </div>
+	  
+	  <div class="form-group" style="display:none;">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1">中奖后显示的头部图片 </label>
+		<div class="col-sm-9">
+			<img width="375" height="220" src="http://wxs.citycloud.org.cn/tpl/Wap/default/common/css/guajiang/images/activity-coupon-winning.jpg" alt="150x150">
+			<div>
+				<input style="width:375px" name="zjpic" value="http://wxs.citycloud.org.cn/tpl/Wap/default/common/css/guajiang/images/activity-coupon-winning.jpg" id="pic1">
+			</div>
+			<button onclick="open_upload_page();return false" class="btn btn-sm btn-primary">上传</button>
+			<a href="marketingActivity/imagePreview" data-target="#modal" data-toggle="modal">预览</a>
+		</div>
+	  </div>
+	  
+	</div>
+	
+	<div class="space-1"></div>
+	
+	<div class="well well-sm">
+	  <p class="font20 blue">活动结束内容</p>
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>活动结束公告主题 </label>
+		<div class="col-sm-9">
+			<input type="text" name="lottery.endtitle" class="col-xs-6" maxlength="60" value="${(lottery.endtitle)!''}">
+		</div>
+	  </div>
+	  
+	  <div class="form-group" style="margin-bottom:0px;">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1">活动结束说明</label>
+		<div class="col-sm-9">
+			<textarea type="text" rows="5" cols="6" name="lottery.endinfo" class="col-xs-9" maxlength="200">${(lottery.endinfo)!''}</textarea>
+		</div>
+	  </div>
+	  <div class="form-group" >
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+		<div class="col-sm-9">
+			备注：换行请输入<font style="color:red">&lt;br/&gt;</font>
+		</div>
+	  </div>
+	  
+	  <div class="form-group" style="display:none;">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1">活动结束图片 </label>
+		<div class="col-sm-9">
+			<img width="375" height="220" src="http://wxs.citycloud.org.cn/tpl/Wap/default/common/css/guajiang/images/activity-coupon-end.jpg" alt="150x150">
+			<div>
+				<input style="width:375px" name="endpicurl" value="http://wxs.citycloud.org.cn/tpl/Wap/default/common/css/guajiang/images/activity-coupon-end.jpg" id="pic1">
+			</div>
+			<button onclick="open_upload_page();return false" class="btn btn-sm btn-primary">上传</button>
+			<a href="marketingActivity/imagePreview" data-target="#modal" data-toggle="modal">预览</a>
+		</div>
+	  </div>
+	</div>
+	
+	<div class="space-1"></div>
+	
+	<div class="well well-sm">
+	  <p class="font20 blue">${(btnName)!""}设置</p>
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span><#if mark=='ggk'> 一等奖奖品设置 <#else> 优惠券名称1</#if> </label>
+		<div class="col-sm-9">
+			<input type="text" name="lotteryprize.prizename" class="col-xs-6" maxlength="50" value="${(lotteryprize1.prizename)!''}">
+			<span>请不要多于50个字</span>
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span><#if mark=='ggk'> 一等奖奖品数量 <#else> 优惠券数量</#if></label>
+		<div class="col-sm-9">
+			<input type="text" name="lotteryprize.prizenum" class="col-xs-2" value="${(lotteryprize1.prizenum)!''}">
+		</div>
+	  </div>
+	  
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><#if mark=='ggk'> 二等奖奖品设置 <#else> 优惠券名称2</#if> </label>
+		<div class="col-sm-9">
+			<input type="text" name="prizename2" class="col-xs-6" maxlength="50" value="${(lotteryprize2.prizename)!''}">
+			<span>请不要多于50个字</span>
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><#if mark=='ggk'> 二等奖奖品数量 <#else> 优惠券数量</#if></label>
+		<div class="col-sm-9">
+			<input type="text" name="prizenum2" class="col-xs-2" maxlength="10" value="${(lotteryprize2.prizenum)!''}"><span>请输入数字</span>
+		</div>
+	  </div>
+	  
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><#if mark=='ggk'> 三等奖奖品设置 <#else> 优惠券名称3</#if> </label>
+		<div class="col-sm-9">
+			<input type="text" name="prizename3" class="col-xs-6" maxlength="50" value="${(lotteryprize3.prizename)!''}">
+			<span>请不要多于50个字</span>
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><#if mark=='ggk'> 三等奖奖品数量 <#else> 优惠券数量</#if></label>
+		<div class="col-sm-9">
+			<input type="text" name="prizenum3" class="col-xs-2" maxlength="10" value="${(lotteryprize3.prizenum)!''}"><span>请输入数字</span>
+		</div>
+	  </div>
+	  
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>预计活动的人数</label>
+		<div class="col-sm-9">
+			<input type="text" name="lottery.allpeople" class="col-xs-2" value="${(lottery.allpeople)!''}">
+			<span>预估活动人数直接影响抽奖概率：中奖概率 = 奖品总数/(预估活动人数*每人抽奖次数) 如果要确保任何时候都100%中奖建议设置为1人参加!<font class="red">如果要确保任何时候都100%中奖建议设置为1人参加!并且奖项只设置一等奖.</font></span>
+		</div>
+	  </div>
+	  
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>每人最多允许抽奖次数</label>
+		<div class="col-sm-9">
+			<input type="text" id="canrqnumsID" name="lottery.canrqnums" class="col-xs-2" value="${(lottery.canrqnums)!''}" maxlength="5">
+			<span>请输入数字</span>
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1">每天最多抽奖次数</label>
+		<div class="col-sm-9">
+			<input type="text" id="daynumsID" name="lottery.daynums" class="col-xs-2" maxlength="1" onblur="numValidate()" value="${(lottery.daynums)!''}">
+			<span>必须小于总抽奖次数！ 0 为不限制 抽完总数就不能抽了! 可以抽奖天数 = 总数/每天抽奖次数!</span>
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>兑奖密码</label>
+		<div class="col-sm-9">
+			<input type="text" name="lottery.buspassword" class="col-xs-3" maxlength="15" value="${(lottery.buspassword)!''}">
+			<span>消费确认密码长度小于15位的数字或字母</span>
+		</div>
+	  </div>
+	  <div class="form-group" >
+		<label class="col-sm-3 control-label no-padding-right" for="form-field-1">是否显示奖品数量</label>
+		<div class="col-sm-9">
+			<div class="radio">
+				<label>
+					<input name="lottery.displayjpnums" type="radio" class="ace" value="1"/>
+					<span class="lbl">显示</span>
+				</label>
+				<label>
+					<input name="lottery.displayjpnums" type="radio" class="ace" value="0" checked="checked"/>
+					<span class="lbl">不显</span>
+				</label>
+			</div>
+		</div>
+	  </div>
+	  
+	</div>
+	
+	<div class="space-1"></div>
+	
+	<div class="clearfix form-actions">
+		<div class="col-md-offset-3 col-md-9">
+			<button class="btn btn-info" type="submit">
+				<i class="ace-icon fa fa-check bigger-110"></i> 提交
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn" type="reset">
+				<i class="ace-icon fa fa-undo bigger-110"></i> 重置
+			</button>
+		</div>
+	</div>
+
+
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	//日期选择器
+	$('.input-daterange').datepicker({
+		language: "zh-CN",
+		autoclose:true,
+		format: 'yyyy-mm-dd' 
+	});
+	
+	$('#add-lottery-form').bootstrapValidator({
+		message: '输入不正确',
+		feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'lottery.title': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入活动名称 !'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 60,
+                        message: '输入长度不能超过60个字符'
+                    }
+                }
+            },
+            'lottery.sttxt': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入优惠券介绍 !'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 200,
+                        message: '输入长度不能超过200个字符'
+                    }
+                }
+            },
+            'lottery.info': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入优惠券活动说明 !'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 200,
+                        message: '输入长度不能超过200个字符'
+                    }
+                }
+            },
+            'lottery.aginfo': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入优惠券使用说明 !'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 200,
+                        message: '输入长度不能超过200个字符'
+                    }
+                }
+            },
+            'lottery.endtitle': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入活动结束公告主题 !'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 60,
+                        message: '输入长度不能超过60个字符'
+                    }
+                }
+            },
+            'lotteryprize.prizename': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入优惠券名称1!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 50,
+                        message: '输入长度不能超过50个字符'
+                    }
+                }
+            },
+            'lotteryprize.prizenum': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入优惠券数量!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 10,
+                        message: '输入长度不能超过10个字符'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '优惠券数量只能输入数字'
+                    }
+                }
+            },
+            'prizenum2':{
+              	 validators: {
+                       stringLength: {
+                           min: 0,
+                           max: 10,
+                           message: '输入长度不能超过10个字符'
+                       },
+                       regexp: {
+                           regexp: /^[0-9]+$/,
+                           message: '只能输入数字'
+                       }
+                   }
+              },
+              'prizenum3':{
+               	 validators: {
+                        stringLength: {
+                            min: 0,
+                            max: 10,
+                            message: '输入长度不能超过10个字符'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '只能输入数字'
+                        }
+                    }
+               },
+               'prizenum4':{
+                	 validators: {
+                         stringLength: {
+                             min: 0,
+                             max: 10,
+                             message: '输入长度不能超过10个字符'
+                         },
+                         regexp: {
+                             regexp: /^[0-9]+$/,
+                             message: '只能输入数字'
+                         }
+                     }
+                },
+            'lottery.allpeople': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入预计活动的人数!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 10,
+                        message: '输入长度不能超过10个字符'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '预计活动的人数只能输入数字'
+                    }
+                }
+            },
+            'lottery.canrqnums': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入每人最多允许抽奖次数!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 5,
+                        message: '输入长度不能超过5个字符'
+                    },
+                    regexp: {
+                    	regexp: /^[0-9]+$/,//regexp: /^[1-5]$/,
+                        message: '抽奖次数只能输入数字'
+                    }
+                }
+            },
+            'lottery.buspassword': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入兑奖密码!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 15,
+                        message: '输入长度不能超过15个字符'
+                    },
+                    regexp: {
+                    	regexp: '^[A-Za-z0-9]+$',
+                        message: '只能输入数字和字母'
+                    }
+                }
+            },
+            'lottery.awardinfo':{
+                validators: {
+                    notEmpty: {
+                        message: '请输入兑奖信息 !'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 60,
+                        message: '输入长度不能超过60个字符'
+                    }
+                }
+            }
+            
+            
+        }
+	});
+	
+	
+	
+});
+
+function numValidate(){
+	var mrzdyxcjcs=$("#canrqnumsID").val().trim();
+	var mtzdcjcs=$("#daynumsID").val();
+	if(""==mrzdyxcjcs){
+		$("#canrqnumsID").focus();
+		$("#daynumsID").val("");
+		alert("请先输入每人最多允许抽奖次数！");
+		return;
+	}
+	if(parseInt(mtzdcjcs)>parseInt(mrzdyxcjcs)){
+		$("#daynumsID").val("");
+		alert("每天最多抽奖次数小于等于每人最多允许抽奖次数"+mrzdyxcjcs+"");
+		$("#daynumsID").focus();
+		return;
+	}
+}
+function changeSz(obj){
+	var jeValue=obj.value;
+	if(isNaN(jeValue))
+	{
+		obj.value='';
+		bootbox.alert('请输入数字');
+		return ;
+	}
+}
+function open_upload_page(){
+	alert(123);
+}
+
+</script>
+</@layout>

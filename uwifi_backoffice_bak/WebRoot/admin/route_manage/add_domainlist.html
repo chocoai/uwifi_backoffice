@@ -1,0 +1,111 @@
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">添加</h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-xs-12">
+			<form class="form-horizontal" id="form" role="form" method="post"
+				action="myRouter/addDomainList">
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">请选择店铺</label>
+					<div class="col-sm-8">
+						<select class="form-control input-large no-padding-right" name="businessid">
+							<option value="">全部</option> <#list businessinfoList as x>
+							<option value="${(x.id!'')}">${(x.busname!"")}</option> </#list>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">请输入域名</label>
+					<div class="col-sm-8">
+						<textarea class="form-control limited" name="controlvalue" placeholder="可输入多个，一行一个" maxlength="300" ></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-8 col-md-offset-3">
+						<span class="green">域名表示访问的地址，不加http://，例如百度的域名为www.baidu.com</span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button data-dismiss="modal" class="btn btn-sm pull-left">
+		<i class="ace-icon fa fa-times"></i> 取消
+	</button>
+	<button type="button" class="btn btn-sm btn-warning" id="clear_btn">
+		<i class="ace-icon fa fa-undo"></i>重置
+	</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button onclick="form_submit();return false"
+		class="btn btn-sm btn-primary">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#form').bootstrapValidator({
+			message : '输入不正确',
+			feedbackIcons : {
+				valid : 'glyphicon glyphicon-ok',
+				invalid : 'glyphicon glyphicon-remove',
+				validating : 'glyphicon glyphicon-refresh'
+			},
+			fields : {
+				'bwlist.businessid' : {
+					validators : {
+						notEmpty : {
+							message : '请选择店铺!'
+						}
+					}
+				},
+				'controlvalue' : {
+					validators : {
+						notEmpty : {
+							message : '请输入域名!'
+						},
+						stringLength : {
+							min : 1,
+							max : 300,
+							message : '输入长度不能超过300个字符'
+						}
+					}
+				},
+			}
+		});
+
+		$("#clear_btn").click(function() {
+			$('#form').data('bootstrapValidator').resetForm(true);
+
+		});
+	});
+	function form_submit() {
+		var form = $("#modal form");
+		form.bootstrapValidator('validate');
+		var bv = form.data('bootstrapValidator');
+
+		if (bv.$invalidFields.size() == 0) {
+
+			var queryString = form.formSerialize();
+			$
+					.post(
+							"myRouter/addDomainList",
+							queryString,
+							function(data) {
+								if (data.status == "1") {
+									window.location.href = "${CPATH}/myRouter/domainList";
+								} else {
+									$("#modal .modal-body .alert").remove();
+									$("#modal .modal-body")
+											.prepend(
+													'<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'
+															+ data.msg
+															+ '</div>');
+								}
+							}, "json");
+		}
+	}
+</script>

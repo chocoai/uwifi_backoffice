@@ -1,0 +1,211 @@
+<#include "/admin/layout/window.html" />
+<@layout> 
+	<link rel="stylesheet" href="resources/css/module.css" type="text/css" media="screen" />  
+	<link rel="stylesheet" href="resources/css/fileuploader.css" type="text/css" media="screen" />  
+	<script type="text/javascript" src="resources/scripts/fileuploader.js"></script>
+    
+    <div class="content-box">
+	<div class="content-box-header">
+		<h3>编辑广告</h3>
+	</div>
+	 <!-- End .content-box-header -->
+
+	<div id="module" class="content-box-content">
+		<#if errorMsg??>
+        <div class="notification error png_bg">
+        	<div>${errorMsg!""}</div>
+            <a class="close" href="#"><img alt="close" title="Close this notification" src="resources/images/icons/cross_grey_small.png"></a>
+        </div>
+        </#if>
+        <#if infoMsg??>
+        <div class="notification information png_bg">
+        	<div>${infoMsg!""}</div>
+            <a class="close" href="#"><img alt="close" title="Close this notification" src="resources/images/icons/cross_grey_small.png"></a>
+        </div>
+        </#if>
+	    <form action="module/editAuthTempletpage/${(templetpage.id!'')}" id="editAuthTempletpage" method="post">
+		<fieldset>
+		    <table class="form">
+                <tfoot>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class="bulk-actions align-left">
+                                <button type="submit" class="button">保存</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+
+		        <tbody>
+		            <tr>
+						<th><label>标题</label></th>
+						  <td><input class="text-input input-small"  type="text" id="title" name="templetpage.title" id="title"
+								maxLength="128" value="${(templetpage.title!'')}" />
+						   </td>
+					</tr>
+		            <tr>
+		                <th><label>图片</label></th>
+		                <td>
+			                <div style="position: relative;">
+                                <input type="text"  maxlength="128"  name="templetpage.mediaurl" value="${(templetpage.mediaurl!'')}"  class="text-input input-small" id="cover">&nbsp;
+                                <button class="button" type="button" id="btn-upload">上传图片 <img src="resources/images/loading.gif" style="display: none;"></button>
+                                <span class="red">*</span><span class="input-notification information png_bg">图片推荐大小为30KB，推荐尺寸230*320（高度*宽度）</span>
+                                <div id="upload-container"></div>
+                                <p id="prev" class="hide">
+                                    <img src="" />
+                                    <a href="">删除</a>
+                                </p>
+                            </div>
+		                </td>
+		            </tr>
+		              <tr>
+						<th><label>外链地址</label></th>
+						  <td >
+						  <input class="text-input input-small" type="text" name="templetpage.outerurl" value="${(templetpage.outerurl)!''}"  maxlength="200"  />
+						   </td>
+					</tr>
+		             <tr>
+						<th><label>排序</label></th>
+						  <td><input class="text-input input-small"  type="text" id="sort" name="templetpage.sort" 
+								maxLength="128" value="${(templetpage.sort!'')}" />
+						   </td>
+					</tr>
+		            
+                    <tr><td colspan="2"></td></tr>
+	            </tbody>
+            </table>
+        </fieldset>
+        </form>
+	</div>
+	<!-- End .content-box-content -->
+</div>
+<!-- End #main-content -->
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$("#editAuthTempletpage").validate({
+		rules: {
+			"templetpage.title": "required",
+			"templetpage.sort" : {
+				required : true,
+				digits: true
+			}
+		},
+		messages: {
+			"templetpage.title" : "请输入标题 !",
+			"templetpage.sort" : {
+				required : "请输入排序 !",
+				digits: "只能输入整数 !"
+			}
+			
+		}
+	});
+
+	var apiUrl = '';
+
+    if ($('#cover').val())
+    {
+        $('#cover').focus();
+        
+	    var url = "${(uploadPath!"")}" + $('#cover').val();
+	    $('#prev').find('img').attr('src', url).end().show();
+    }
+
+	/**
+     * 上传控件
+     */
+    var uploader = new qq.FileUploader({
+        element: $('#upload-container')[0],
+        action: 'site/loadFileImage',
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+        sizeLimit: 1024*1024*20,
+        params: {
+        },
+        onSubmit: function(id, fileName)
+        {
+            $('#btn-upload img').show();
+            return true;
+        },
+        onComplete: function(id, fileName, responseJSON)
+        {
+            setTimeout(function(){
+                $('#btn-upload img').hide();
+            }, 1000);
+
+            if (responseJSON.error != undefined)
+            {
+                return false;
+            }
+
+            setTimeout(function(){
+                $('#cover').val(responseJSON.fileId);  //改
+
+                $('#prev').find('img').attr('src', '${(uploadPath!"")}' + responseJSON.fileId).end().show();
+            }, 1000);
+
+            return true;
+        },
+        showMessage: function(message)
+        {
+            doAlert(message);
+        }
+    });
+
+
+    /**
+     * 删除预览图
+     */
+    $('#prev a').bind('click', function(){
+        var url = $('#cover').val();
+
+        if (!url)
+        {
+            return false;
+        }
+
+        /* 删除网络图片 */
+        if (url.indexOf('http') === 0)
+        {
+            $('#cover').val('');
+            $('#prev').hide();
+        }
+
+        /* 删除本地图片 */
+        else
+        {
+            doConfirm('您确定要删除图片吗？', function(){
+                $.ajax({
+                    url: 'site/deletePicture',
+                    data: 'type=100&path=' + url,
+                    success: function(data){
+                        if (data == 0)
+                        {
+                            $('#cover').val('');
+                            $('#prev').hide();
+                        }
+                        else
+                        {
+                            alert('删除图片失败。');
+                        }
+                    }
+                });
+            });
+        }
+
+        return false;
+    });
+
+
+    /**
+     * 图片加载失败
+     */
+    $('#prev img')[0].onerror = function()
+    {
+        $('#prev img').attr('src', 'resources/images/404.jpg')
+    }
+	
+});
+
+</script>
+</@layout>

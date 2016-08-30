@@ -1,0 +1,209 @@
+<#include "/admin/layout/layout_channel.html" />
+<@layout>
+    <!-- Main Content Section with everything -->
+    <!-- Page Head -->
+<div class="page-header">
+	<h1>
+		<p>首页
+		<small>
+			<i class="ace-icon fa fa-angle-double-right"></i>
+			首页
+		</small></p>
+	</h1>
+</div>
+<!-- PAGE CONTENT BEGINS -->
+<div class="tab-content" style="margin-bottom:5px;">
+<div class="row">
+    <div class="col-sm-12">
+		<p class="font20 blue bolder">概况数据</p>
+	</div>
+	<div class="col-sm-3 widget-container-col" <#if userRole==admin> style="display:block;" <#else> style="display:none;" </#if> >
+		<div class="widget-box">
+			<div class="widget-body">
+				<div class="widget-main align-center">
+				    <div class="space-5"></div>
+			    	<p class="middle">
+						<span class="font50 red bolder">${goldchannel!0}</span>家
+					</p>
+					<div class="space-5"></div>
+					<p class="no-margin-bottom">金牌渠道</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-3 widget-container-col" <#if userRole==admin || userRole==gold> style="display:block;" <#else> style="display:none;" </#if>>
+		<div class="widget-box">
+			<div class="widget-body">
+				<div class="widget-main align-center">
+				    <div class="space-5"></div>
+			    	<p class="middle">
+						<span class="font50 orange2 bolder">${silverchannel!0}</span>家
+					</p>
+					<div class="space-5"></div>
+					<p class="no-margin-bottom">银牌渠道</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-3 widget-container-col" <#if userRole==admin || userRole==gold || userRole==silver || userRole==business> style="display:block;" <#else> style="display:none;" </#if>>
+		<div class="widget-box">
+			<div class="widget-body">
+				<div class="widget-main align-center">
+				    <div class="space-5"></div>
+			    	<p class="middle">
+						<span class="font50 purple bolder">${businessuser!0}</span>家
+					</p>
+					<div class="space-5"></div>
+					<p class="no-margin-bottom">商家</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-3 widget-container-col">
+		<div class="widget-box">
+			<div class="widget-body">
+				<div class="widget-main align-center">
+				    <div class="space-5"></div>
+			    	<p class="middle">
+						<span class="font50 green bolder">${onlineDeviceCount!0}</span>台
+					</p>
+					<div class="space-5"></div>
+					<p class="no-margin-bottom">使用中路由</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="row">
+		<div class="col-sm-12 widget-container-col">
+		<div class="widget-box">
+<!-- 			<div class="widget-header"> -->
+				<p class="font20 blue bolder">&nbsp;&nbsp;账号到期</p>
+<!-- 			</div> -->
+			<div class="widget-body" style="margin-top:-13px;">
+				<div class="widget-main" style="height:195px">
+<table style="border:1px solid #cccccc;background:#f9f9f9;" width="100%" >
+	<tr height="35px">
+		<td width="75%" style="border-right:1px solid #cccccc;">&nbsp;&nbsp;信息</td>
+		<td>&nbsp;&nbsp;到期时间</td>
+	</tr>
+</table>
+					<div class="scrollable" data-size="150">
+						<div class="content" style="height:140px">
+						    <table class="table table-striped table-bordered table-hover">
+						        <#if operatorList.size() &gt; 0>
+						        <#list operatorList as operator >
+							    <tr>
+									<td width="75%">商家账号：${(operator.username)!""}  还有  ${(operator.remind)}天 ， 即将到期。</td>
+									<td>${(operator.jssj)?string('yyyy-MM-dd')}</td>
+								</tr>
+								</#list>
+								<#else>
+								<tr>
+									<td colspan="2" class="align-center">
+										<p class="font20 bolder well lighter red">无账号到期</p>
+									</td>
+								<tr>
+								</#if>
+						    </table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		</div>
+  	</div>
+</div> 
+
+<div class="tab-content">
+<div class="row">
+  <div class="col-sm-11">
+	<p class="font20 blue bolder">动态数据</p>
+  </div>
+  <div class="col-sm-1">
+    	<p class="blue bolder"><a href="dashboardchannel/moreInfo">更多》</a></p>
+    <div style="display:none;">
+	<form action="site/channel" method="post" id="busFrm">
+		<div class="input-group">
+			<input type="text" placeholder="请输入渠道或商家名称"
+				class="form-control search-query" name="channelORbusname" size="60"
+				value="${(channelORbusname!'')}"> <span class="input-group-btn">
+				<input type="hidden" name="searchType" value="1">
+				<button class="btn btn-purple btn-sm" type="submit">
+					查询 <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+				</button>
+			</span>
+		</div>
+	</form>
+	</div>
+  </div>
+	<table class="table table-striped table-bordered table-hover" style="width:99%;" align="center">
+		<thead>
+			<tr>
+				<th width="75%">信息</th>
+				<th class="center">时间</th>
+			</tr>
+		</thead>
+		<#if operatorlogPage.getList().size() &gt; 0>
+		<tbody>
+		    <#list operatorlogPage.getList() as x>
+		    <tr>
+				<td><#if x.pid==1>管理员:</#if>
+					<#if x.pid==3>金牌渠道:</#if>
+					<#if x.pid==4>银牌渠道:</#if>
+					<span class="blue">${(x.operator)}</span>
+					<#if x.logtype==1>
+					成功为<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if>开通<span class="blue">${(x.username)!""}</span>  账号
+					</#if>
+					<#if x.logtype==2>
+					删除<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if><span class="blue">${(x.username)!""}</span>  账号
+					</#if> 
+					<#if x.logtype==3>
+					启用<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if><span class="blue">${(x.username)!""}</span>  账号
+					</#if>
+					<#if x.logtype==4>
+					禁用<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if><span class="blue">${(x.username)!""}</span>  账号
+					</#if>
+					<#if x.logtype==5>
+					审核<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if><span class="blue">${(x.username)!""}</span>  账号
+					</#if>
+					<#if x.logtype==6>
+					修改<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if> <span class="blue">${(x.username)!""}</span>  密码
+					</#if>
+				</td>
+				<td align="center"><#if x.operatortime ?? > ${(x.operatortime)?string('yyyy-MM-dd HH:mm:ss')} </#if> </td>
+			</tr>
+			</#list>
+		</tbody>
+		<#else>
+		<tfoot>
+			<tr>
+				<td colspan="2" class="align-center">
+					<p class="font20 bolder well lighter red">无数据</p>
+				</td>
+			<tr>
+		</tfoot>
+		</#if>
+		</table>
+</div>
+</div>
+<!-- /.col -->
+<!-- PAGE CONTENT ENDS -->
+<script type="text/javascript">
+jQuery(function($) {
+	// scrollables
+	$('.scrollable').each(function () {
+		var $this = $(this);
+		$(this).ace_scroll({
+			size: $this.data('size') || 100,
+			//styleClass: 'scroll-left scroll-margin scroll-thin scroll-dark scroll-light no-track scroll-visible'
+		});
+	});
+});
+</script>
+</@layout>

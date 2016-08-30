@@ -1,0 +1,91 @@
+<#include "/admin/layout/layout_shop.html" /> <@layout>
+<!-- Main Content Section with everything -->
+<!-- Page Head -->
+<style>
+<!--
+	table {
+		table-layout:fixed
+	}
+	td {
+		word-break : break-all; overflow:hidden; 
+	}
+-->
+</style>
+<div class="page-header">
+	<h1>
+		<p>
+		广告页面
+		 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+		首页幻灯片
+		</small>
+		</p>
+	</h1>
+</div>
+<!-- PAGE CONTENT BEGINS -->
+<div class="well well-sm col-xs-12">
+	<div class="col-sm-8">
+		<a class="btn btn-info btn-sm" href="siteflash/addFlash" >
+			<i class="ace-icon fa fa-building align-top bigger-125"></i> 添加幻灯片
+		</a>
+<!-- 		<button class="btn btn-success btn-sm"> -->
+<!-- 			<i class="ace-icon fa fa-wifi align-top bigger-125"></i> 添加新设备 -->
+<!-- 		</button> -->
+	</div>
+</div>
+
+<div class="hr hr-double hr-dotted hr18 col-xs-12"></div>
+
+<table class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+			<th class="center">所属商家</th>
+			<th class="center">幻灯片描述</th>
+			<th class="center">幻灯片图片</th>
+			<th class="center">幻灯片外链地址</th>
+			<th class="center">排序</th>
+			<th class="center">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		<#if siteflashinfoPage.getTotalRow() != 0 >
+		<#list siteflashinfoPage.getList() as x>
+		<tr>
+			<td>${(x.busname!"")}</td>
+			<td>${(x.info!"")}</td>
+			<td><img alt="" src="${(uploadPath!'')}${(x.img!'')}" height="80" width="100"></td>
+			<td>${(x.url!"")}</td>
+			<td>${(x.sort!"")}</td>
+			<td class="center">
+				<div class="hidden-sm hidden-xs action-buttons">
+					<a class="green" href="siteflash/editFlash?id=${(x.id!'')}&pageNo=${(siteflashinfoPage.pageNumber)!'1'}" title="编辑"> <i
+						class="ace-icon fa fa-pencil bigger-130"></i>
+					</a> <a class="delete red" href="${CPATH}/siteflash/delete?id=${(x.id)}&type=1&pageNo=${(siteflashinfoPage.pageNumber)!'1'}" title="您确定要删除么？"> <i
+						class="ace-icon fa fa-trash-o bigger-130"></i>
+					</a> 
+				</div>
+
+				<div class="hidden-md hidden-lg">
+					<div class="inline position-relative">
+						<button class="btn btn-minier btn-yellow dropdown-toggle"
+							data-toggle="dropdown" data-position="auto">
+							<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+						</button>
+					</div>
+				</div>
+			</td>
+		</tr>
+		</#list>
+		<#else>
+		<tr>
+			<td colspan="6" class="align-center">
+				<p class="font20 bolder well lighter red">暂无幻灯片信息</p>
+			</td>
+		<tr>
+		</#if>
+	</tbody>
+</table>
+
+<#include "/admin/layout/_paginate.html" />
+<@paginate currentPage=siteflashinfoPage.pageNumber totalPage=siteflashinfoPage.totalPage actionUrl="${CPATH}/siteflash/" />
+
+</@layout>

@@ -1,0 +1,81 @@
+<#include "/admin/layout/window.html" />
+<@layout>   
+    <div class="content-box">
+		<div class="content-box-header">
+			<h3>页面设置</h3>
+		</div>
+	 <!-- End .content-box-header -->
+	<div class="content-box-content">
+		<#if errorMsg??>
+        <div class="notification error png_bg">
+        	<div>${errorMsg!""}</div>
+            <a class="close" href="#"><img alt="close" title="Close this notification" src="resources/images/icons/cross_grey_small.png"></a>
+        </div>
+        </#if>
+        <#if infoMsg??>
+        <div class="notification information png_bg">
+        	<div>${infoMsg!""}</div>
+            <a class="close" href="#"><img alt="close" title="Close this notification" src="resources/images/icons/cross_grey_small.png"></a>
+        </div>
+        </#if>
+	    
+	    <table class="list">
+	    	<#if authPagemanage.getTotalRow() != 0 >
+			<thead>
+				<tr>
+				   <th>标题</th>
+				   <th>图片</th>
+				   <th>排序</th>
+				   <th>创建时间</th>
+				   <th>更新时间</th>
+				   <th class="center">操作</th>
+				</tr>
+			</thead>
+			</#if>
+
+			<tfoot>
+				<#if authPagemanage.getTotalRow() == 0 >
+				<tr>
+					<td colspan="8">
+   				        <div class="notification attention png_bg">
+                           	<div>还没有认证页页面信息，你可以点击下方的添加按钮进行添加。</div>
+                           </div>
+	    			</td>
+				</tr>
+				</#if>
+				<tr>
+					<td colspan="8">
+					<a href="module/addAuthTempletpage" class="button">添加认证页</a>&nbsp;&nbsp;
+					<a href="${(authPageView!'')}?gw_id=${(acid!'')}" onclick="openPopWindow(this.href, '预览', 300, 480);return false;" class="button">预览</a>
+						<#include "/admin/layout/_paginate.html" />
+	<@paginate currentPage=authPagemanage.pageNumber totalPage=authPagemanage.totalPage actionUrl="${CPATH}/acinfo/" />
+
+						<div class="clear"></div>
+					</td>
+				</tr>
+			</tfoot>
+
+			<tbody>
+				
+				<#list authPagemanage.getList() as x>
+				<tr>
+					<td>${(x.title!"")}</td>
+					<td><img alt="" src="${(uploadPath!'')}${(x.mediaurl!'')}" height="100" width="120"></td>
+					<td>${(x.sort!"")}</td>
+					<td>${(x.addtime!"")}</td>
+					<td>${(x.updatetime!"")}</td>
+					<td class="center">
+                         <a href="module/editAuthTempletpage/${(x.id)}"> 编辑</a>
+                        |<a href="module/deleteAuthPage/${(x.id)}" onclick="doConfirm('您确定要删除吗？', this.href);return false;">
+                        	删除</a>
+					</td>
+				</tr>
+				</#list>
+			</tbody>
+		</table>
+	    
+	</div>
+	<!-- End .content-box-content -->
+</div>
+<!-- End #main-content -->
+</@layout>

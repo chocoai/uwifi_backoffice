@@ -1,0 +1,326 @@
+<#include "/admin/layout/layout_channel.html" /> <@layout>
+
+<div class="page-header">
+	<h1>
+	  <p>
+		 商家管理 <small> <i
+			class="ace-icon fa fa-angle-double-right"></i> 修改商家
+		</small>
+	  </p>
+	</h1>
+</div>
+<form class="form-horizontal" id="add-business-form" role="form" action="business/editBusiness/${(userobj.id)!''}?pageNo=${(currentPage)!'1'}" method="post">
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> <span class="red">*</span>商家名称 </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.businessname" class="col-xs-10 col-sm-5" value="${(userobj.businessname)!''}">
+		</div>
+	</div>
+	
+	<div class="form-group" style="display:none;">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 上级渠道 </label>
+
+		<div class="col-sm-9">
+			<select name="userinfo.pid">
+				<option value="">--请选择--</option> 
+				<#list channelList as x>
+				<option value="${(x.id!'')}" <#if userobj?? && userobj.pid==x.id> selected </#if> >${(x.channelname!"")}</option>
+				</#list>
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> <span class="red">*</span>联系人 </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.contacts" class="col-xs-3" value="${(userobj.contacts)!''}"><label class="no-padding-left">（必填，长度2-10字符）</label>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> <span class="red">*</span>手机  </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.phone" class="col-xs-3" value="${(userobj.phone)!''}"><label class="no-padding-left">（必填，长度为11位数字）</label>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> QQ </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.qq" class="col-xs-3"  value="${(userobj.qq)!''}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> <span class="red">*</span>区域 </label>
+
+		<div class="col-sm-9">
+			<select name="userinfo.province" id="provinceID" onchange="getCityByProvince(this)">
+				<option value="">--请选择--</option> 
+				<#list provinceList as province>
+				<option value="${(province.bm!'')}" <#if "${(userobj.province!'')}"=="${(province.bm!'')}"> selected </#if> >${(province.mc!"")}</option>
+				</#list>
+			</select>&nbsp;&nbsp;
+			<select name="userinfo.city" id="citySel">
+				<option value="">--请选择--</option> 
+			</select>
+		</div>
+		
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 详细地址 </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="userinfo.address" class="col-xs-10 col-sm-5"  value="${(userobj.address)!''}">
+			
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> <span class="red">*</span>账号 </label>
+
+		<div class="col-sm-9">
+			<label class="no-padding-left"> ${(userobj.loginname)!''} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a class="btn btn-info btn-sm" href="business/changePass/${(userobj.id)}"
+					data-target="#modal" data-toggle="modal">重置密码</a></label>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"><span class="red">*</span>账号有效期 </label>
+
+		<div class="col-sm-9">
+		    <div class="input-daterange input-group">
+				<input type="text" class="input-sm form-control" name="starttime" value="${(userobj.starttime!'')?string('yyyy-MM-dd')}"/>
+				<span class="input-group-addon">
+					<i class="fa fa-exchange"></i>
+				</span>
+				<input type="text" class="input-sm form-control" name="endtime" value="${(userobj.endtime!'')?string('yyyy-MM-dd')}"/>
+			</div>
+		</div>
+		
+	</div>
+	
+<!-- 	 <div class="form-group" > -->
+<!-- 		<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="red">*</span>状态</label> -->
+<!-- 		<div class="col-sm-9"> -->
+<!-- 			<div class="radio"> -->
+<!-- 				<label> -->
+<!-- 					<input name="userinfo.status" type="radio" class="ace" value="1" <#if userobj?? && userobj.status==1> checked="checked" </#if> /> -->
+<!-- 					<span class="lbl">启用</span> -->
+<!-- 				</label> -->
+<!-- 				<label> -->
+<!-- 					<input name="userinfo.status" type="radio" class="ace" value="0" <#if userobj?? && userobj.status==0> checked="checked" </#if> /> -->
+<!-- 					<span class="lbl">禁用</span> -->
+<!-- 				</label> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	  </div> -->
+
+	<div class="space-4"></div>
+
+
+	<div class="clearfix form-actions">
+		<div class="col-md-offset-3 col-md-9">
+			<button class="btn btn-info" type="submit">
+				<i class="ace-icon fa fa-check bigger-110"></i> 提交
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn" type="reset" id="clear_btn" >
+				<i class="ace-icon fa fa-undo bigger-110"></i> 重置
+			</button>
+		</div>
+	</div>
+
+
+</form>
+<script type="text/javascript">
+jQuery(function($) {
+	var provinceID = $('#provinceID').val();
+	if(provinceID != "") {
+		$('#citySel').empty();
+		var citySelect = $('#citySel');
+		citySelect.append('<option value="">--请选择--</option>');
+		
+		$.ajax({
+			type : "post",
+			url : "business/getCity",
+			data : {
+				"provinceId" : provinceID
+			},
+			dataType : "json",
+			success : function(data) {
+				var selectCity = "${(userobj.city!'')}";
+				$.each(data, function(key, item) {
+					if(item.bm == selectCity) {
+						citySelect.append('<option value="'+item.bm+'" selected="selected">' + item.mc + '</option>');
+					} else {
+						citySelect.append('<option value="'+item.bm+'">'+ item.mc + '</option>');
+					}
+					
+				});
+			}
+		});
+	}
+});
+$(document).ready(function(){
+	jQuery.validator.addMethod("chrnum", function(value, element) {
+		var chrnum = /^([a-zA-Z0-9]+)$/;
+		return this.optional(element) || (chrnum.test(value));
+		}, "只能输入数字和字母(字符A-Z, a-z, 0-9)");
+	 jQuery.validator.addMethod("isMobile", function(value, element) {
+		  var length = value.length;
+		  return this.optional(element) || (length == 11);
+		 }, "请正确填写您的手机号码!");
+	
+	//输入验证
+	$("#add-business-form").validate({
+		rules: {
+			"userinfo.businessname" : {
+				required : true,
+				maxlength : 50,
+				remote: {
+                    url: "business/checkNameDouble",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                    	"id" : function () {
+                            return ${(userobj.id)!''};　　　　
+                        }
+                    }
+                }
+			},
+   			"userinfo.contacts" : {
+				required : true,
+				minlength : 2,
+				maxlength : 10
+			},
+   			"userinfo.phone" : {
+   				required : true,
+   				digits: true,
+   				isMobile : true
+   			},
+   			"userinfo.qq" : {
+				digits: true
+			},
+   			"userinfo.province" : {
+				required : true
+			},
+			"userinfo.city" : {
+				required : true
+			},
+   			"userinfo.loginname" : {
+   				required : true,
+   				chrnum : true,
+				maxlength : 30
+   			},
+   			"userinfo.password" : {
+   				required : true,
+   				minlength : 6,
+				maxlength : 20
+   			},
+   			"pwd" : {
+   				required : true,
+   				minlength : 6,
+				maxlength : 20
+   			},
+   			"userinfo.starttime" : {
+   				required : true
+   			},
+   			"userinfo.endtime" : {
+   				required : true
+   			},
+			"userinfo.status" : {
+				required : true
+			}
+			
+		},
+		messages: {
+			"userinfo.businessname" : {
+				required : "请输入商家名称 !",
+				maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+				remote : "商家名称重复，请重新输入!"
+			},
+			"userinfo.contacts" : {
+				required : "请输入联系人 !",
+				minlength : jQuery.validator.format("请输入一个 长度最少是 {0} 的字符串"),
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+			},
+			"userinfo.phone" : {
+				required : "请输入手机号 !",
+				digits: "只能输入整数 !",
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+			},
+			"userinfo.qq" : {
+				digits: "只能输入整数 !"
+			},
+			"userinfo.province" : {
+				required : "请选择所在省!"
+			},
+			"userinfo.city" : {
+				required : "请选择所在市 !"
+			},
+			"userinfo.loginname" : {
+				required : "请输入账号 !",
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+				
+			},
+			"userinfo.password" : {
+				required : "请输入密码 !",
+				minlength : jQuery.validator.format("请输入一个 长度最少是 {0} 的字符串"),
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+			},
+			"pwd" : {
+				required : "请输入重复密码 !",
+				minlength : jQuery.validator.format("请输入一个 长度最少是 {0} 的字符串"),
+				maxlength : jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+			}
+		}
+	});
+});
+jQuery(function($) {
+	//日期选择器
+	$('.input-daterange').datepicker({
+		language: "zh-CN",
+		autoclose:true,
+		format: 'yyyy-mm-dd' 
+	});
+});
+
+function getCityByProvince(obj){
+	$('#citySel').empty();
+	var cityInfo = $('#citySel');
+	$.ajax({
+		type : "post",
+		url : "business/getCity",
+		data : {"provinceId" : obj.value},
+		dataType : "json",
+		success : function(data) {
+			if(data.length > 0){
+				cityInfo.append('<option value="" selected>' + "--请选择--" + '</option>');
+				$.each(data, function(key, item) {
+					cityInfo.append('<option value="'+item.bm+'">' + item.mc + '</option>');
+				});
+			}else{
+				cityInfo.append('<option value="" selected>' + "--请选择--" + '</option>');
+			}
+		}
+	});
+}
+</script>
+</@layout>

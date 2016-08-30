@@ -1,0 +1,125 @@
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">编辑</h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-xs-12">
+			<form class="form-horizontal" id="form" role="form" method="post"
+				action="myRouter/editDomainList">
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">请选择店铺</label>
+					<div class="col-sm-8">
+						<select class="form-control input-large no-padding-right" name="bwlist.businessid">
+							<option value="">--请选择店铺--</option> <#list businessinfoList as x>
+							<option value="${(x.id!'')}" ${(x.id=bwlist.businessid)?string('selected="selected"','')}>${(x.busname!"")}</option> </#list>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">域名</label>
+					<div class="col-sm-8">
+						<input type="text" name="bwlist.controlvalue" value="${bwlist.controlvalue}"
+							placeholder="请输入域名" class="form-control input-xlarge">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">备注</label>
+					<div class="col-sm-8">
+						<input type="text" name="bwlist.comment" value="${bwlist.comment!''}" placeholder="请输入备注"
+							class="form-control input-xlarge">
+					</div>
+				</div>
+				<input type="hidden" name="bwlist.whtype" value="${bwlist.whtype!''}">
+				<input type="hidden" name="bwlist.id" value="${bwlist.id!''}">
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button data-dismiss="modal" class="btn btn-sm pull-left">
+		<i class="ace-icon fa fa-times"></i> 取消
+	</button>
+	<button type="button" class="btn btn-sm btn-warning" id="clear_btn">
+		<i class="ace-icon fa fa-undo"></i>重置
+	</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button onclick="form_submit();return false"
+		class="btn btn-sm btn-primary">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#form').bootstrapValidator({
+			message : '输入不正确',
+			feedbackIcons : {
+				valid : 'glyphicon glyphicon-ok',
+				invalid : 'glyphicon glyphicon-remove',
+				validating : 'glyphicon glyphicon-refresh'
+			},
+			fields : {
+				'bwlist.businessid' : {
+					validators : {
+						notEmpty : {
+							message : '请选择店铺!'
+						}
+					}
+				},
+				'bwlist.controlvalue' : {
+					validators : {
+						notEmpty : {
+							message : '请输入域名!'
+						},
+						stringLength : {
+							min : 1,
+							max : 30,
+							message : '输入长度不能超过30个字符'
+						}
+					}
+				},
+				'bwlist.comment' : {
+					validators : {
+						stringLength : {
+							min : 1,
+							max : 100,
+							message : '输入长度不能超过100个字符'
+						}
+					}
+				}
+			}
+		});
+
+		$("#clear_btn").click(function() {
+			$('#form').data('bootstrapValidator').resetForm(true);
+
+		});
+	});
+	function form_submit() {
+		var form = $("#modal form");
+		form.bootstrapValidator('validate');
+		var bv = form.data('bootstrapValidator');
+
+		if (bv.$invalidFields.size() == 0) {
+
+			var queryString = form.formSerialize();
+			$
+					.post(
+							"myRouter/editDomainList",
+							queryString,
+							function(data) {
+								if (data.status == "1") {
+									window.location.href = "${CPATH}/myRouter/domainList/${currentPage!'1'}";
+								} else {
+									$("#modal .modal-body .alert").remove();
+									$("#modal .modal-body")
+											.prepend(
+													'<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'
+															+ data.msg
+															+ '</div>');
+								}
+							}, "json");
+		}
+	}
+</script>

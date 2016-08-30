@@ -1,0 +1,254 @@
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">修改幻灯片</h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+	<div class="col-xs-12">
+		<form id="image_add_form" class="form-horizontal" role="form" action="templetManage" method="post">
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="form-field-1"> 所属店铺  </label>
+		
+				<label class="col-sm-3" for="form-field-1"> ${(businessinfo.busname)!''}</label>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="form-field-1"> 幻灯片描述  </label>
+		
+				<div class="col-sm-9">
+					<input type="text" name="templetpage.desc" class="form-control input-large" value="${templetpage.desc!''}" placeholder="请输入幻灯片描述">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="form-field-1"> 幻灯片图片  </label>
+					
+				<div class="col-sm-9">
+					<input type="text" name="templetpage.mediaurl" id="cover" class="input-large" value="${templetpage.mediaurl!''}" readonly>
+		                                
+					<div id="upload-container" class="btn btn-sm btn-primary"></div><span>推荐30KB，230*320</span>
+					<img id="showload" src="resources/images/loading.gif" style="display: none">
+					<p id="prev" style="display: none">
+						<img src="" width="180px" height="120px" />
+						<a style="cursor:pointer;">删除</a>
+					</p>
+				</div>
+		
+			</div>
+		
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="form-field-1"> 幻灯片链接地址  </label>
+		
+				<div class="col-sm-9">
+					<input type="text" id="outerUrlId" class="form-control input-large" name="templetpage.outerurl" value="${templetpage.outerurl!''}" placeholder="请输入幻灯片链接地址">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="form-field-1"> 排序  </label>
+		
+				<div class="col-sm-9">
+					<input type="text" name="templetpage.sort" class="input-medium" value="${templetpage.sort!''}" placeholder="请输入排序号">
+				</div>
+			</div>
+		</form>
+	</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button data-dismiss="modal" class="btn btn-sm pull-left">
+		<i class="ace-icon fa fa-times"></i> 取消
+	</button>
+	<button type="button" class="btn btn-sm btn-warning" id="clear_btn"><i class="ace-icon fa fa-undo"></i>重置</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button onclick="form_submit();return false"
+		class="btn btn-sm btn-primary">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('#image_add_form').bootstrapValidator({
+		message: '输入不正确',
+		feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+//         	'templetpage.title': {
+//                 validators: {
+//                     notEmpty: {
+//                         message: '请输入标题!'
+//                     },
+//                     stringLength: {
+//                         min: 1,
+//                         max: 200,
+//                         message: '输入长度不能超过200个字符'
+//                     }
+//                 }
+//             },
+            'templetpage.desc': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入幻灯片描述!'
+                    }
+                }
+            },
+            'templetpage.mediaurl': {
+                validators: {
+                    notEmpty: {
+                        message: '请上传幻灯片图片！'
+                    }
+                }
+            },
+            'templetpage.sort': {
+                validators: {
+                    notEmpty: {
+                        message: '请输入排序号!'
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 10,
+                        message: '输入长度不能超过10个字符'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '排序号只能输入数字'
+                    }
+                }
+            }
+        }
+	});
+	
+	$("#clear_btn").click(function() {
+		$('#image_add_form').data('bootstrapValidator').resetForm(true);
+		delImg();
+		$('#outerUrlId').val("");
+	});
+	
+	var apiUrl = '';
+	if ($('#cover').val()){
+		$('#cover').focus();
+		var url = "${(uploadPath!"")}" + $('#cover').val();
+		$('#prev').find('img').attr('src', url).end().show();
+	}
+
+	/**
+     * 上传控件
+     */
+    var uploader = new qq.FileUploader({
+        element: $('#upload-container')[0],
+        action: 'site/loadFileImage',
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+        sizeLimit: 1024*1024*20,
+        params: {
+        },
+        onSubmit: function(id, fileName)
+        {
+            $('#showload').show();
+            return true;
+        },
+        onComplete: function(id, fileName, responseJSON)
+        {
+            setTimeout(function(){
+                $('#showload').hide();
+            }, 1000);
+
+            if (responseJSON.error != undefined)
+            {
+                return false;
+            }
+
+            setTimeout(function(){
+                $('#cover').val(responseJSON.fileId); 
+
+                $('#prev').find('img').attr('src', '${(uploadPath!"")}' + responseJSON.fileId).end().show();
+            }, 1000);
+
+            return true;
+        },
+        showMessage: function(message)
+        {
+            doAlert(message);
+        }
+    });
+
+
+    /**
+     * 删除预览图
+     */
+    $('#prev a').bind('click', function(){
+        var url = $('#cover').val();
+        if (!url) {
+            return false;
+        }
+        /* 删除网络图片 */
+        if (url.indexOf('http') === 0){
+            $('#cover').val('');
+            $('#prev').hide();
+        }
+        /* 删除本地图片 */
+        else {
+        	if(confirm("您确定要删除图片吗？")){
+        		delImg(url);
+        	}
+        }
+
+        return false;
+    });
+
+    /**
+     * 图片加载失败
+     */
+    $('#prev img')[0].onerror = function()
+    {
+        $('#prev img').attr('src', 'resources/images/404.jpg')
+    }
+	
+});
+
+function delImg(addrUrl){
+	jQuery.ajax({
+        url: 'site/deletePicture',
+        data: 'type=100&path=' + addrUrl,
+        success: function(data){
+            if (data == 0)
+            {
+                $('#cover').val('');
+                $('#prev').hide();
+            }
+            else
+            {
+                alert('删除图片失败。');
+            }
+        }
+    });
+}
+
+function form_submit(){
+	var form = $("#image_add_form");
+	form.bootstrapValidator('validate');
+	var bv = form.data('bootstrapValidator');
+	if(bv.$invalidFields.size() == 0) {
+		var queryString = form.formSerialize();
+		$.post(
+				"templetManage/editAuthTempletpage/${(templetpage.id)}",
+				queryString,
+				function(data) {
+					if(data.status == "1"){
+						window.location.href="${CPATH}/templetFlashManage";
+					}else{
+						$(".modal-body .alert").remove();
+						$(".modal-body").prepend('<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'+data.msg+'</div>');
+					}
+				},
+			"json"
+		);
+	}
+}
+</script>

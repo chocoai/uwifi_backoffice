@@ -1,0 +1,91 @@
+<#include "/admin/layout/layout_shop.html" /> <@layout>
+<!-- Main Content Section with everything -->
+<style>
+<!--
+	table {
+		table-layout:fixed
+	}
+	td {
+		word-break : break-all; overflow:hidden; 
+	}
+-->
+</style>
+<!-- Page Head -->
+<div class="page-header">
+	<h1>
+	  <p>
+		广告页面
+		 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+			分类管理
+		</small>
+	  </p>
+	</h1>
+</div>
+<!-- PAGE CONTENT BEGINS -->
+<div class="well well-sm col-xs-12">
+	<div class="col-sm-8">
+		<a class="btn btn-info btn-sm" href="classify/addClassify<#if (siteclassify.id)??>?id=${(siteclassify.id)}</#if>">
+			<i class="ace-icon fa fa-building align-top bigger-125"></i> 添加<#if (siteclassify.name)??>${(siteclassify.name)}子</#if>分类
+		</a>
+	</div>
+</div>
+
+<div class="hr hr-double hr-dotted hr18 col-xs-12"></div>
+
+<table class="table table-striped table-bordered table-hover" >
+	<thead>
+		<tr>
+			<th>店铺名称</th>
+			<th>分类名称</th>
+			<th>分类描述</th>
+			<th>分类图片</th>
+			<th class="center">显示顺序</th>
+			<th class="center">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		<#if siteclassifyinfoPage.getTotalRow() != 0 >
+		<#list siteclassifyinfoPage.getList() as x>
+		<tr>
+			<td>${(x.busname!"")}</td>
+			<td>${(x.name!"")}</td>
+			<td>${(x.info!"")}</td>
+			<td><img alt="" src="${(uploadPath!'')}${(x.img!'')}" height="100" width="120"></td>
+			<td class="center">${(x.sort!"")}</td>
+			<td class="center">
+				<div class="hidden-sm hidden-xs action-buttons">
+					<a class="blue" href="classify/subClassList/1?fid=${(x.id!'')}" title="子分类"> <i
+						class="ace-icon fa fa-building bigger-130"></i>
+					</a>
+					<a class="green" href="classify/editClassify?id=${(x.id!'')}&fid=${(x.fid!'')}&pageNo=${(siteclassifyinfoPage.pageNumber)!'1'}" title="编辑"> <i
+						class="ace-icon fa fa-pencil bigger-130"></i>
+					</a> <a class="delete red" href="${CPATH}/classify/delete?id=${(x.id!'')}&fid=${(x.fid!'')}&pageNo=${(siteclassifyinfoPage.pageNumber)!'1'}" title="您确认要删除么?"> <i
+						class="ace-icon fa fa-trash-o bigger-130"></i>
+					</a> 
+				</div>
+
+				<div class="hidden-md hidden-lg">
+					<div class="inline position-relative">
+						<button class="btn btn-minier btn-yellow dropdown-toggle"
+							data-toggle="dropdown" data-position="auto">
+							<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+						</button>
+					</div>
+				</div>
+			</td>
+		</tr>
+		</#list>
+		<#else>
+		<tr>
+			<td colspan="6" class="align-center">
+				<p class="font20 bolder well lighter red">暂无分类信息</p>
+			</td>
+		<tr>
+		</#if>
+	</tbody>
+</table>
+
+<#include "/admin/layout/_paginate.html" />
+<@paginate currentPage=siteclassifyinfoPage.pageNumber totalPage=siteclassifyinfoPage.totalPage actionUrl="${CPATH}/classify/${isSubClass!''}" urlParas=id/>
+
+</@layout>

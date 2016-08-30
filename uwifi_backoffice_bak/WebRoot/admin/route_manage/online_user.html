@@ -1,0 +1,274 @@
+<#include "/admin/layout/layout_new.html" /> <@layout>
+<script src="resources/js/highcharts/js/highcharts.js"></script>
+<script src="resources/js/highcharts/js/modules/exporting.js"></script>
+<script type="text/javascript">
+$(function () {
+        $('#highchart').highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: '客户在店时间分布'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: ['60分钟以上', '30-60分钟', '10-30分钟', '0-10分钟'],
+                title: {
+                    text: '时间'
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '人数',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: '人'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor || '#FFFFFF'),
+                shadow: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: '${serieName}',
+            	<#if !noData >
+                data: [${sixty!'0'}, ${thirty!'0'}, ${ten!'0'}, ${zero!'0'}]
+                <#else>
+                data: ['0', '0', '0', '0']
+                </#if>
+            }]
+        });
+    });
+    
+
+</script>
+<!-- Main Content Section with everything -->
+<!-- Page Head -->
+<div class="page-header">
+	<h1>
+		<p>我的路由</a> <small> <i
+			class="ace-icon fa fa-angle-double-right"></i> 在线用户
+		</small></p>
+	</h1>
+</div>
+
+<!-- PAGE CONTENT BEGINS -->
+<div class="row">
+	<div class="col-sm-12">
+		<p class="font20 blue bolder">在线客户概况数据</p>
+	</div>
+	<div class="col-sm-3 widget-container-col">
+		<div class="widget-box">
+			<div class="widget-body">
+				<div class="widget-main align-center">
+					<div class="space-10"></div>
+					<p class="middle">
+						<span class="font60 orange2 bolder">${presentUserCount!'0'}</span>人
+					</p>
+					<div class="space-10"></div>
+					<p class="no-margin-bottom">在线客户数</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-3 widget-container-col">
+		<div class="widget-box">
+			<div class="widget-body">
+				<div class="widget-main align-center">
+					<div class="space-10"></div>
+					<p class="middle">
+						<span class="font60 purple bolder">${firstusercount!'0'}</span>人
+					</p>
+					<div class="space-10"></div>
+					<p class="no-margin-bottom">首次到店用户</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-3 widget-container-col">
+		<div class="widget-box">
+			<div class="widget-body">
+				<div class="widget-main align-center">
+					<div class="space-10"></div>
+					<p class="middle">
+						<span class="font60 red bolder">${over30Time!'0'}</span>人
+					</p>
+					<div class="space-10"></div>
+					<p class="no-margin-bottom">到店时间>30分钟</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.row -->
+
+<div class="space-12"></div>
+
+<div class="col-sm-12 well well-sm">
+	<div class="col-sm-2">
+		<p class="font20 blue bolder">详细数据</p>
+	</div>
+
+	<form action="myRouter/onlineUser" method="post">
+		<div class="col-sm-3">
+			<select id="busSelect" class="form-control" onchange="getAcInfo()" name="busId">
+				<#if busId = 0 >
+				<option value="" selected="selected">全部店铺</option> 
+				<#else>
+				<option value="">全部店铺</option> 
+				</#if>
+				<#list businessinfoList as x>
+				<#if x.id == busId >
+					<option value="${(x.id!'')}" selected="selected">${(x.busname!"")}</option>
+				<#else>
+					<option value="${(x.id!'')}">${(x.busname!"")}</option>
+				</#if>
+				</#list>
+			</select>
+		</div>
+		<div class="col-sm-3">
+			<select class="form-control" id="acSelect" name="acId">
+				<option value="">全部路由器</option>
+			</select>
+		</div>
+		<div class="col-sm-3">
+			<button class="btn btn-purple btn-sm" type="submit">
+				查询 <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+			</button>
+		</div>
+	</form>
+
+</div>
+
+<div class="space-12"></div>
+
+<div class="row">
+	<div class="col-sm-12" id="highchart"></div>
+</div>
+
+
+<div class="space-12"></div>
+<div class="row">
+<div class="col-sm-12">
+		<p class="font20 blue bolder">手机客户列表</p>
+</div>
+<div class="col-sm-12">
+	<table class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>手机号码</th>
+				<th>到店时间</th>
+				<th>到店次数</th>
+				<th>累计上网时间<br />(分)
+				</th>
+			</tr>
+		</thead>
+
+		<#if detailList.size() &gt; 0>
+		<tbody>
+			<#list detailList as map>
+			<tr>
+				<td>${map["phone"]}</td>
+				<td>${map["visittime"]}</td>
+				<td>${map["count"]}</td>
+				<td>${map["accumulatedusetime"]}</td>
+			</tr>
+			</#list>
+		</tbody>
+		<#else >
+		<tfoot>
+			<tr>
+				<td colspan="10" class="align-center">
+					<p class="font20 bolder well lighter red">没有查询到数据哦，请调整查询条件</p>
+				</td>
+			<tr>
+		</tfoot>
+		</#if>
+	</table>
+</div>
+</div>
+
+<!-- PAGE CONTENT ENDS -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+var busId = $('#busSelect').val();
+
+if(busId != "") {
+	$('#acSelect').empty();
+	var acSelect = $('#acSelect');
+	acSelect.append('<option value="">全部路由器</option>');
+	
+	$.ajax({
+		type : "post",
+		url : "myRouter/getAcinfoList",
+		data : {
+			"businessid" : busId
+		},
+		dataType : "json",
+		success : function(data) {
+			var selectAc = "${acId!''}";
+			$.each(data, function(n, data) {
+				if(data.acid == selectAc) {
+					acSelect.append('<option value="'+data.acid+'" selected="selected">'
+							+ data.acid + '</option>');
+				} else {
+					acSelect.append('<option value="'+data.acid+'">'
+							+ data.acid + '</option>');
+				}
+				
+			});
+		}
+	});
+}
+function getAcInfo() {
+	var busId = $('#busSelect').val();
+	$('#acSelect').empty();
+	var acSelect = $('#acSelect');
+	
+	acSelect.append('<option value="">全部路由器</option>');
+	if(busId != "") {
+		$.ajax({
+			type : "post",
+			url : "myRouter/getAcinfoList",
+			data : {
+				"businessid" : busId
+			},
+			dataType : "json",
+			success : function(data) {
+				$.each(data, function(n, data) {
+					acSelect.append('<option value="'+data.id+'">'
+							+ data.acid + '</option>');
+				});
+			}
+		});
+	}
+}
+		</script>
+</@layout>

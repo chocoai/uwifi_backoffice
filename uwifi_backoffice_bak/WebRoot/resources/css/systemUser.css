@@ -1,0 +1,26 @@
+/**
+ * 系统用户编辑
+ */
+form label {
+	display: inline;
+} 
+
+form {
+    position: relative;
+}
+
+from table th {
+    padding-right: 20px !important;
+    width: 100px;
+    text-align: right;
+    vertical-align: middle;
+}
+
+form span.red {
+    margin-left: 10px;
+}
+
+form td.radioButtonListContainer label {
+	font-weight:normal;
+	margin-right: 10px;
+}

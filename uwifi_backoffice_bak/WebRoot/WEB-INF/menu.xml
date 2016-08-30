@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus title="首页" icon="fa-home home-icon">
+	<menu action="dashboard">
+		<title>首页</title>
+		<icon>fa-home</icon>
+		<links>dashboard</links>
+	</menu>
+
+	<menu action="businessinfo">
+		<title>我的店铺</title>
+		<icon>fa-building</icon>
+		<links>businessinfo</links>
+	</menu>
+	<menu action="myRouter">
+		<title>我的路由</title>
+		<icon>fa-wifi</icon>
+		<links>
+			<link>
+				<title>运行状态</title>
+				<icon>fa-caret-right</icon>
+				<uri>myRouter/onlineStatus</uri>
+			</link>
+			<link>
+				<title>在线用户</title>
+				<icon>fa-caret-right</icon>
+				<uri>myRouter/onlineUser</uri>
+			</link>
+			<link>
+				<title>上网管理</title>
+				<icon>fa-caret-right</icon>
+				<uri>myRouter/bwList</uri>
+			</link>
+		</links>
+	</menu>
+	
+	<menu action="dataAnalysis">
+		<title>数据中心</title>
+		<icon>fa-area-chart</icon>
+		<links>
+			<link>
+				<title>客流统计</title>
+				<icon>fa-line-chart</icon>
+				<uri>dataAnalysis/index</uri>
+			</link>
+			<link>
+				<title>客户分析</title>
+				<icon>fa-bar-chart-o</icon>
+				<uri>dataAnalysis/userStatistics</uri>
+			</link>
+			<link>
+				<title>广告分析</title>
+				<icon>fa-pie-chart</icon>
+				<uri>dataAnalysis/advertisement</uri>
+			</link>
+		</links>
+	</menu>
+	
+	<menu action="sysUser">
+		<title>账号设置 </title>
+		<icon>fa fa-cog</icon>
+		<links>
+			<link>
+				<title>系统账号</title>
+				<icon>fa-caret-right</icon>
+				<uri>sysUser/index</uri>
+			</link>
+			<link>
+				<title>我的账号</title>
+				<icon>fa-caret-right</icon>
+				<uri>sysUser/account</uri>
+			</link>
+		</links>
+	</menu>
+</menus>

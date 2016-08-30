@@ -1,0 +1,224 @@
+<#include "/admin/layout/layout_shop.html" /> <@layout>
+<style>
+<!--
+	table {
+		table-layout:fixed
+	}
+	td {
+		word-break : break-all; overflow:hidden; 
+	}
+-->
+</style>
+<div class="page-header">
+	<h1>
+		<P>
+		广告页面
+		 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+			模板管理
+		</small>
+		</P>
+	</h1>
+</div>
+<div class="tabbable">
+	<ul class="nav nav-tabs padding-18 tab-size-bigger" id="myTab">
+
+		<li class="active"><a data-toggle="tab" href="#faq-tab-2"> <i
+				class="green ace-icon fa fa-magic bigger-120"></i> 首页模板选择
+		</a></li>
+
+		<li><a data-toggle="tab" href="#faq-tab-3"> <i
+				class="orange ace-icon fa fa-credit-card bigger-120"></i> 微官网预览
+		</a></li>
+
+
+	</ul>
+
+	<div class="tab-content no-border padding-24">
+
+		<div id="faq-tab-2" class="tab-pane fade in active">
+								
+						<div class="clearfix" ></div>
+						<div class="itemdiv memberdiv">
+							<div class="user1"  >
+								<a href="javascript:selectModule(133)"><img alt="Bob Doe's avatar" src="resources/images/module/shouye133.png" /></a>
+								<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "133">
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename"  class="ace" id="tpltype133"  checked="checked"  onchange="selectModule(133);" />
+											<span class="lbl">模板133</span>
+										</label>
+									</div>
+								<#else>
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" class="ace" id="tpltype133"   onchange="selectModule(133);" />
+											<span class="lbl">模板133</span>
+										</label>
+									</div>
+								</#if>
+								
+							</div>
+
+						</div>
+						<div class="itemdiv memberdiv">
+							<div class="user1"  >
+								<a href="javascript:selectModule(111)"><img alt="Bob Doe's avatar" src="resources/images/module/shouye111.png" ></a>
+								<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "111">
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype111" class="ace" checked="checked"  onchange="selectModule(111);" />
+											<span class="lbl">模板111</span>
+										</label>
+									</div>
+								<#else>
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename"  id="tpltype111" class="ace"  onchange="selectModule(111);" />
+											<span class="lbl">模板111</span>
+										</label>
+									</div>
+								</#if>
+								
+							</div>
+
+						</div>
+						<div class="itemdiv memberdiv">
+							<div class="user1"  >
+								<a href="javascript:selectModule(13)"><img alt="Bob Doe's avatar" src="resources/images/module/shouye13.png" ></a>
+								<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "13">
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype13" checked="checked"  class="ace"  onchange="selectModule(13);" />
+											<span class="lbl">模板13</span>
+										</label>
+									</div>
+								<#else>
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype13" class="ace"  onchange="selectModule(13);" />
+											<span class="lbl">模板13</span>
+										</label>
+									</div>
+								</#if>
+								
+							</div>
+
+						</div>
+						<div class="itemdiv memberdiv">
+							<div class="user1"  >
+								<a href="javascript:selectModule(258)"><img alt="Bob Doe's avatar" src="resources/images/module/shouye258.png" ></a>
+								<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "258">
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename"  id="tpltype258" checked="checked"  class="ace"  onchange="selectModule(258);" />
+											<span class="lbl">模板258</span>
+										</label>
+									</div>
+								<#else>
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype258" class="ace"  onchange="selectModule(258);" />
+											<span class="lbl">模板258</span>
+										</label>
+									</div>
+								</#if>
+								
+							</div>
+						</div>
+						<div class="itemdiv memberdiv">
+							<div class="user1"  >
+								<a href="javascript:selectModule(998)"><img alt="Bob Doe's avatar" src="resources/images/module/shouye998.png" ></a>
+								<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "998">
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype998" checked="checked"   class="ace"  onchange="selectModule(998);" />
+											<span class="lbl">模板998</span>
+										</label>
+									</div>
+								<#else>
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype998" class="ace"  onchange="selectModule(998);" />
+											<span class="lbl">模板998</span>
+										</label>
+									</div>
+								</#if>
+								
+							</div>
+						</div>
+						<div class="itemdiv memberdiv">
+							<div class="user1"  >
+								<a href="javascript:selectModule(999)"><img alt="Bob Doe's avatar" src="resources/images/module/shouye999.png" ></a>
+								<p align="center">
+								<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "999">
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype999" checked="checked"  class="ace"  onchange="selectModule(999);" />
+											<span class="lbl">模板999</span>
+										</label>
+									</div>
+								<#else>
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype999"  class="ace"  onchange="selectModule(999);" />
+											<span class="lbl">模板999</span>
+										</label>
+									</div>
+								</#if>
+								
+							</div>
+						</div>
+						<div class="itemdiv memberdiv">
+							<div class="user1"  >
+								<a href="javascript:selectModule(997)"><img alt="Bob Doe's avatar" src="resources/images/module/shouye997.png" ></a>
+								<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "997">
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype997" checked="checked"  class="ace"  onchange="selectModule(997);" />
+											<span class="lbl">模板997</span>
+										</label>
+									</div>
+								<#else>
+									<div class="radio" align="center">
+										<label>
+											<input type="radio" name="tpltypename" id="tpltype997" class="ace"  onchange="selectModule(997);" />
+											<span class="lbl">模板997</span>
+										</label>
+									</div>
+								</#if>
+								
+							</div>
+						</div>
+						
+		</div>
+
+		<div id="faq-tab-3" class="tab-pane fade">
+			<h4 class="blue">
+				<i class="ace-icon fa fa-check bigger-110"></i>
+				请扫描二维码
+			</h4>
+			<img src="module/generateCode" />
+		</div>
+
+
+	</div>
+</div>
+<script type="text/javascript">
+function selectModule(tpltypeid){
+	$.ajax({
+		type : "post",
+		url : "module/selectModule",
+		data : {
+			"tpltypeid" : tpltypeid
+		},
+		dataType : "json",
+		success : function(data) {
+			
+			bootbox.alert(data.infoMsg);
+			$('#tpltype'+tpltypeid).removeAttr("checked");
+			$('#tpltype'+tpltypeid).prop("checked",true);
+		}
+	});
+}
+</script>
+</@layout>

@@ -1,0 +1,173 @@
+<#include "/admin/layout/layout_shop.html" /> <@layout>
+<style>
+	<!--
+		.user1 {
+/* 			position: absolute; */
+		}
+	-->
+</style>
+<script language="javascript">
+<!--
+ -->
+</script>
+<div class="page-header">
+	<h1>
+		<p>
+		 广告页面 <small> <i
+			class="ace-icon fa fa-angle-double-right"></i> 模板首页
+		</small>
+		</p>
+	</h1>
+</div>
+
+<div class="row">
+	<div class="col-sm-6" style="width: 98%;">
+		<div class="widget-box transparent" id="recent-box">
+			<div class="widget-header">
+				<div class="widget-toolbar no-border">
+					<ul class="nav nav-tabs" id="recent-tab">
+						<li class="active"><a data-toggle="tab" href="#member-tab">栏目首页模板风格</a>
+						</li>
+						
+<!-- 						<li class=""><a data-toggle="tab" href="#task-tab">微官网预览</a> -->
+<!-- 						</li> -->
+
+<!-- 						<li class="active"><a data-toggle="tab" href="#comment-tab">Comments</a> -->
+<!-- 						</li> -->
+					</ul>
+				</div>
+			</div>
+
+			<div class="widget-body"  >
+				<div class="widget-main padding-4">
+					<div class="tab-content padding-8">
+					
+						<div id="member-tab" class="tab-pane active" >
+							<div class="clearfix" >
+								
+								
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<img alt="Bob Doe's avatar" src="resources/images/module/shouye133.png" >
+										<p align="center">
+										<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "133">
+											<input type="radio" name="tpltypename" checked="checked"  onchange="selectModule(133);" />模板133</p>
+										<#else>
+											<input type="radio" name="tpltypename"  onchange="selectModule(133);" />模板133</p>
+										</#if>
+										
+									</div>
+
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<img alt="Bob Doe's avatar" src="resources/images/module/shouye111.png" >
+										<p align="center">
+										<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "111">
+											<input type="radio" name="tpltypename" checked="checked"  onchange="selectModule(111);" />模板111</p>
+										<#else>
+											<input type="radio" name="tpltypename"  onchange="selectModule(111);" />模板111</p>
+										</#if>
+										
+									</div>
+
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<img alt="Bob Doe's avatar" src="resources/images/module/shouye13.png" >
+										<p align="center">
+										<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "13">
+											<input type="radio" name="tpltypename" checked="checked"  onchange="selectModule(13);" />模板13</p>
+										<#else>
+											<input type="radio" name="tpltypename"  onchange="selectModule(13);" />模板13</p>
+										</#if>
+										
+									</div>
+
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<img alt="Bob Doe's avatar" src="resources/images/module/shouye258.jpg" >
+										<p align="center">
+										<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "258">
+											<input type="radio" name="tpltypename" checked="checked"  onchange="selectModule(258);" />模板258</p>
+										<#else>
+											<input type="radio" name="tpltypename"  onchange="selectModule(258);" />模板258</p>
+										</#if>
+										
+									</div>
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<img alt="Bob Doe's avatar" src="resources/images/module/shouye998.png" >
+										<p align="center">
+										<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "998">
+											<input type="radio" name="tpltypename" checked="checked"  onchange="selectModule(998);" />模板998</p>
+										<#else>
+											<input type="radio" name="tpltypename"  onchange="selectModule(258);" />模板998</p>
+										</#if>
+										
+									</div>
+								</div>
+								<div class="itemdiv memberdiv">
+									<div class="user1"  >
+										<img alt="Bob Doe's avatar" src="resources/images/module/shouye999.png" >
+										<p align="center">
+										<#if (siteinfo.tpltypeid)?? && siteinfo.tpltypeid == "999">
+											<input type="radio" name="tpltypename" checked="checked"  onchange="selectModule(999);" />模板999</p>
+										<#else>
+											<input type="radio" name="tpltypename"  onchange="selectModule(999);" />模板999</p>
+										</#if>
+										
+									</div>
+								</div>
+								
+								
+							</div>
+
+							<div class="space-4"></div>
+
+
+						</div>
+						<!-- /.#member-tab -->
+<!-- 						<div id="task-tab" class="tab-pane"> -->
+<!-- 							<h4 class="smaller lighter green"> -->
+<!-- 								<i class="ace-icon fa fa-list"></i> 微官网预览 -->
+<!-- 							</h4> -->
+<!-- 							<iframe id="myframe" src="http://portal-st.uwificloud.com:9090/index?businessid=57" width="300px" height="400px"></iframe> -->
+<!-- 						</div> -->
+					
+					
+					</div>
+				</div>
+				<!-- /.widget-main -->
+			</div>
+			<!-- /.widget-body -->
+		</div>
+		<!-- /.widget-box -->
+	</div>
+	<!-- /.col -->
+
+
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+	});
+	function selectModule(tpltypeid){
+		$.ajax({
+			type : "post",
+			url : "module/selectModule",
+			data : {
+				"tpltypeid" : tpltypeid
+			},
+			dataType : "json",
+			success : function(data) {
+				
+				bootbox.alert(data.infoMsg);
+			}
+		});
+	}
+
+</script>
+</@layout>

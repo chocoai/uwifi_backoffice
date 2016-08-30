@@ -1,0 +1,85 @@
+<#include "/admin/layout/layout_channel.html" /> <@layout>
+
+<div class="tab-content">
+<div class="row">
+  <div class="col-sm-8">
+	<p class="font20 blue bolder">动态数据</p>
+  </div>
+  <div class="col-sm-4">
+	<form action="dashboardchannel/moreInfo" method="post" id="logFrm">
+		<div class="input-group">
+			<input type="text" placeholder="请输入渠道或商家名称"
+				class="form-control search-query" name="channelORbusname" size="60"
+				value="${(channelORbusname!'')}"> <span class="input-group-btn">
+				<input type="hidden" name="searchType" value="1">
+				<button class="btn btn-purple btn-sm" type="submit">
+					查询 <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+				</button>
+			</span>
+		</div>
+	</form>
+  </div>
+	<table class="table table-striped table-bordered table-hover" style="width:99%;" align="center">
+		<thead>
+			<tr>
+				<th width="75%">渠道/商家</th>
+				<th class="center">时间</th>
+			</tr>
+		</thead>
+		<#if operatorlogPage.getList().size() &gt; 0>
+		<tbody>
+		    <#list operatorlogPage.getList() as x>
+		    <tr>
+				<td><#if x.pid==1>管理员:</#if>
+					<#if x.pid==3>金牌渠道:</#if>
+					<#if x.pid==4>银牌渠道:</#if>
+					<span class="blue">${(x.operator)}</span>
+					<#if x.logtype==1>
+					成功为<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if>开通<span class="blue">${(x.username)!""}</span>  账号
+					</#if>
+					<#if x.logtype==2>
+					删除<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if><span class="blue">${(x.username)!""}</span>  账号
+					</#if> 
+					<#if x.logtype==3>
+					启用<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if><span class="blue">${(x.username)!""}</span>  账号
+					</#if>
+					<#if x.logtype==4>
+					禁用<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if><span class="blue">${(x.username)!""}</span>  账号
+					</#if>
+					<#if x.logtype==5>
+					审核<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if><span class="blue">${(x.username)!""}</span>  账号
+					</#if>
+					<#if x.logtype==6>
+					修改<#if x.roleid==2>商家<#elseif x.roleid==3>金牌渠道<#elseif x.roleid==4>银牌渠道</#if> <span class="blue">${(x.username)!""}</span>  密码
+					</#if>
+				</td>
+				<td align="center"><#if x.operatortime ?? > ${(x.operatortime)?string('yyyy-MM-dd HH:mm:ss')} </#if> </td>
+			</tr>
+			</#list>
+		</tbody>
+		<#else>
+		<tfoot>
+			<tr>
+				<td colspan="2" class="align-center">
+					<p class="font20 bolder well lighter red">无数据</p>
+				</td>
+			<tr>
+		</tfoot>
+		</#if>
+		</table>
+		<#if operatorlogPage.getList().size() &gt; 0>
+		<div class="row">
+			<#include "/admin/layout/_paginateBySearch.html" />
+<@paginate currentPage=operatorlogPage.pageNumber totalPage=operatorlogPage.totalPage actionUrl="${CPATH}/dashboardchannel/moreInfo/" />
+		</div>
+		</#if>
+</div>
+</div>
+<script type="text/javascript">
+function searchForPage(url){
+	var frm = $("#logFrm");
+	frm.attr("action",url);
+	frm.submit();
+}
+</script>
+</@layout>

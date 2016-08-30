@@ -1,0 +1,281 @@
+<#include "/admin/layout/layout_shop.html" /> <@layout>
+
+<div class="page-header">
+	<h1>
+		<P>
+		 广告页面
+		  <i class="ace-icon fa fa-angle-double-right"></i> 底部导航菜单
+			 <small> <i
+			class="ace-icon fa fa-angle-double-right"></i> 修改菜单
+		</small>
+		</P>
+	</h1>
+</div>
+<form class="form-horizontal" id="edit-menu-form" role="form" action="navigatemenu/editBottomMenu?id=${(sitecatemenu.id!'')}&fid=${(sitecatemenu.fid!'')}&pageNo=${currentPage!'1'}" method="post">
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 店铺名称 </label>
+
+		<label class="col-sm-3"
+			for="form-field-1"> ${(businessinfo.busname)!''} </label>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 菜单名称 </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="sitecatemenu.name" class="col-xs-10 col-sm-5" value="${(sitecatemenu.name)!''}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 图标地址 </label>
+			
+		<div class="col-sm-9">
+		<div id="upload-container" class="btn btn-sm btn-primary"></div>
+             <img id="showload" src="resources/images/loading.gif" style="display: none">
+             <span class="red">* 只能上传(jpg,jpeg,gif,png)格式的图片</span>
+			<input type="text" name="sitecatemenu.img" id="cover" readonly="readonly" class="col-xs-10 col-sm-5" value="${(sitecatemenu.img)!''}">
+                                
+             <p id="prev" style="display: none">
+                 <img src="" width="120px" height="100px" />
+                 <a style="cursor:pointer;">删除</a>
+             </p>
+		</div>
+
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 外链地址 </label>
+
+		<div class="col-sm-9">
+			<input type="text" name="sitecatemenu.url" id="form-field-1" class="col-xs-10 col-sm-5" value="${(sitecatemenu.url)!''}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 排序 </label>
+
+		<div class="col-sm-9">
+			<input type="text"  name="sitecatemenu.sort" class="col-xs-10 col-sm-5" maxlength="5" style="width:45px;" value="${(sitecatemenu.sort)!''}" >
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label no-padding-right"
+			for="form-field-1"> 是否显示  </label>
+
+		<div class="col-sm-9">
+			<#if sitecatemenu.status?? && sitecatemenu.status == 1>
+			<input name="sitecatemenu.status" type="radio" value="1" checked="checked"/>是&nbsp;&nbsp;
+		    <input name="sitecatemenu.status" type="radio" value="0" />否
+			<#else>
+			<input name="sitecatemenu.status" type="radio" value="1" />是&nbsp;&nbsp;
+		    <input name="sitecatemenu.status" type="radio" value="0" checked="checked"/>否
+			</#if>
+			
+		</div>
+	</div>
+
+	<div class="space-4"></div>
+
+
+	<div class="clearfix form-actions">
+		<div class="col-md-offset-3 col-md-9">
+			<button class="btn btn-info" type="submit">
+				<i class="ace-icon fa fa-check bigger-110"></i> 提交
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn" type="button" id="clear_btn">
+				<i class="ace-icon fa fa-undo bigger-110"></i> 重置
+			</button>
+		</div>
+	</div>
+
+
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	
+	var apiUrl = '';
+
+	 if ($('#cover').val())
+	    {
+	        $('#cover').focus();
+	        var url = "${(uploadPath!"")}" + $('#cover').val();
+		    $('#prev').find('img').attr('src', url).end().show();
+	    }
+
+	/**
+     * 上传控件
+     */
+    var uploader = new qq.FileUploader({
+        element: $('#upload-container')[0],
+        action: 'site/loadFileImage',
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+        sizeLimit: 1024*1024*20,
+        params: {
+        },
+        onSubmit: function(id, fileName)
+        {
+            $('#showload').show();
+            return true;
+        },
+        onComplete: function(id, fileName, responseJSON)
+        {
+            setTimeout(function(){
+                $('#showload').hide();
+            }, 1000);
+
+            if (responseJSON.error != undefined)
+            {
+                return false;
+            }
+
+            setTimeout(function(){
+                $('#cover').val(responseJSON.fileId);  //改
+                $('#cover').focus();
+                $('#prev').find('img').attr('src', '${(uploadPath!"")}' + responseJSON.fileId).end().show();
+            }, 1000);
+
+            return true;
+        },
+        showMessage: function(message)
+        {
+            doAlert(message);
+        }
+    });
+
+
+    /**
+     * 删除预览图
+     */
+    $('#prev a').bind('click', function(){
+        var url = $('#cover').val();
+
+        if (!url)
+        {
+            return false;
+        }
+
+        /* 删除网络图片 */
+        if (url.indexOf('http') === 0)
+        {
+            $('#cover').val('');
+            $('#prev').hide();
+        }
+
+        /* 删除本地图片 */
+        else
+        {
+        	bootbox.confirm('您确定要删除图片吗？', function(res){
+        		if(res == true){
+        			 $.ajax({
+                      url: 'site/deletePicture',
+                      data: 'type=100&path=' + url,
+                      success: function(data){
+                          if (data == 0)
+                          {
+                              $('#cover').val('');
+                              $('#prev').hide();
+                          }
+                          else
+                          {
+                              alert('删除图片失败。');
+                          }
+                      }
+                  });
+        		}
+            });
+        }
+
+        return false;
+    });
+
+    /**
+     * 图片加载失败
+     */
+    $('#prev img').onerror = function()
+    {
+        $('#prev img').attr('src', 'resources/images/404.jpg')
+    }
+    
+////输入验证
+    // validate signup form on keyup and submit
+   	$("#edit-menu-form").validate({
+   		rules: {
+   			"sitecatemenu.name" : {
+   				required : true,
+   				maxlength : 50
+   			},
+   			"sitecatemenu.img": "required",
+   			"sitecatemenu.url" : {
+   				required : true,
+   				maxlength : 100,
+   				url : true
+   			},
+   			"sitecatemenu.sort" : {
+   				required : true,
+   				digits: true,
+   				maxlength : 5
+   			}
+   			
+   			
+   		},
+   		messages: {
+   			"sitecatemenu.name" : {
+   				required : "请输入菜单名称 !",
+   				maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+   			},
+   			"sitecatemenu.img" : "请上传图片!",
+   			"sitecatemenu.url" : {
+   				required : "请输入外链地址 !",
+   				maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串"),
+   				url: "请输入合法的地址 ,如(http://www.sina.com.cn)!"
+   			},
+   			"sitecatemenu.sort" : {
+   				required : "请输入排序 !",
+   				digits: "只能输入整数 !",
+   				maxlength: jQuery.validator.format("请输入一个 长度最多是 {0} 的字符串")
+   			}
+   			
+   			
+   		}
+   	});
+    
+       $("#clear_btn").click(function() {
+    	   
+    	    $("input[name='sitecatemenu.name']").val('');
+	   		$("input[name='sitecatemenu.img']").val('');
+	   		$("input[name='sitecatemenu.url']").val('');
+	   		$("input[name='sitecatemenu.sort']").val('');
+   		//删除图片
+   		$.ajax({
+               url: 'site/deletePicture',
+               data: 'type=100&path=' + url,
+               success: function(data){
+                   if (data == 0)
+                   {
+                       $('#cover').val('');
+                       $('#prev').hide();
+                   }
+                   else
+                   {
+                       alert('删除图片失败。');
+                   }
+               }
+           });
+   		
+   		
+   	});
+	
+});
+
+</script>
+</@layout>

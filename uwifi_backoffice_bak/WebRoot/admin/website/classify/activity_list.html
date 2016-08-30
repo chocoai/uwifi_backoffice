@@ -1,0 +1,223 @@
+<style type="text/css">
+<!--
+.modal-dialog {
+	width: 70%;
+}
+
+.modal-header {
+	height: 60px;
+}
+
+-->
+</style>
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">选择活动列表</h4>
+</div>
+
+<div class="modal-body">
+	<div class="tab-content no-border padding-24">
+		<div id="faq-tab-1" class="tab-pane fade active in">
+			<h4 class="blue">
+				<i class="ace-icon fa fa-credit-card bigger-130"></i> 相关活动
+			</h4>
+
+			<div class="space-8"></div>
+			
+			<div id="faq-list-1"
+				class="panel-group accordion-style1 accordion-style2">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<a href="#faq-1-2" data-parent="#faq-list-1"
+							data-toggle="collapse" class="accordion-toggle <#if lotteryType?? && lotteryType == 1>  <#else> collapsed </#if> "> <i
+							class="pull-right ace-icon fa <#if lotteryType?? && lotteryType == 1> fa-chevron-down <#else> fa-chevron-left </#if>"
+							data-icon-hide="ace-icon fa fa-chevron-down"
+							data-icon-show="ace-icon fa fa-chevron-left"></i>  幸运大转盘
+						</a>
+					</div> 
+
+					<div class="panel-collapse collapse <#if lotteryType?? && lotteryType == 1> in <#else>  </#if>" id="faq-1-2" <#if lotteryType?? && lotteryType == 1 > style="" <#else> style="height: 0px;" </#if> >
+						<div class="panel-body">
+							<div id="faq-list-nested-1"
+								class="panel-group accordion-style1 accordion-style2">
+							<#list listLottery as lottery >
+								<#if lottery.type == 1>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<a href="" onclick="selectActivity('${(activityUrl)}/lotterybig?businessid=${(lottery.businessid)!''}&id=${(lottery.id)!''}')" data-dismiss="modal"  class="accordion-toggle collapsed <#if lotteryId?? && lotteryId==lottery.id > green </#if> " >
+											<i class="ace-icon fa fa-asterisk smaller-80 middle"
+											data-icon-hide="ace-icon fa fa-minus"
+											data-icon-show="ace-icon fa fa-plus"></i>&nbsp;${(lottery.title)!''}
+										</a>
+									</div>
+								</div>
+								</#if>
+							</#list>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+			<div id="faq-list-2"
+				class="panel-group accordion-style1 accordion-style2">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<a href="#faq-2-2" data-parent="#faq-list-2"
+							data-toggle="collapse" class="accordion-toggle <#if lotteryType?? && lotteryType == 3>  <#else> collapsed </#if>"> <i
+							class="pull-right ace-icon fa <#if lotteryType?? && lotteryType == 3> fa-chevron-down <#else> fa-chevron-left </#if>"
+							data-icon-hide="ace-icon fa fa-chevron-down"
+							data-icon-show="ace-icon fa fa-chevron-left"></i>  优惠券
+						</a>
+					</div>
+
+					<div class="panel-collapse collapse <#if lotteryType?? && lotteryType == 3> in </#if> " id="faq-2-2" <#if lotteryType?? && lotteryType == 3> style="" <#else> style="height: 0px;" </#if> >
+						<div class="panel-body">
+							<div id="faq-list-nested-2"
+								class="panel-group accordion-style1 accordion-style2">
+								<#list listLottery as lottery >
+								<#if lottery.type == 3>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<a href="" onclick="selectActivity('${(activityUrl)}/coupon?businessid=${(lottery.businessid)!''}&id=${(lottery.id)!''}')" data-dismiss="modal"   class="accordion-toggle collapsed <#if lotteryId?? && lotteryId==lottery.id > green </#if>">
+											<i class="ace-icon fa fa-asterisk smaller-80 middle"
+											data-icon-hide="ace-icon fa fa-minus"
+											data-icon-show="ace-icon fa fa-plus"></i>&nbsp;${(lottery.title)!''}
+										</a>
+									</div>
+								</div>
+								</#if>
+								</#list>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+			<div id="faq-list-3"
+				class="panel-group accordion-style1 accordion-style2">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<a href="#faq-3-2" data-parent="#faq-list-3"
+							data-toggle="collapse" class="accordion-toggle <#if lotteryType?? && lotteryType == 2>  <#else> collapsed </#if>"> <i
+							class="pull-right ace-icon fa <#if lotteryType?? && lotteryType == 2> fa-chevron-down <#else> fa-chevron-left </#if>"
+							data-icon-hide="ace-icon fa fa-chevron-down"
+							data-icon-show="ace-icon fa fa-chevron-left"></i> 刮刮卡
+						</a>
+					</div>
+
+					<div class="panel-collapse collapse <#if lotteryType?? && lotteryType == 2> in </#if>" id="faq-3-2" <#if lotteryType?? && lotteryType == 2> style="" <#else> style="height: 0px;" </#if>>
+						<div class="panel-body">
+							<div id="faq-list-nested-3"
+								class="panel-group accordion-style1 accordion-style2">
+								<#list listLottery as lottery >
+								<#if lottery.type == 2>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<a href="" onclick="selectActivity('${(activityUrl)}/guajiang?businessid=${(lottery.businessid)!''}&id=${(lottery.id)!''}')" data-dismiss="modal"  class="accordion-toggle collapsed <#if lotteryId?? && lotteryId==lottery.id > green </#if>">
+											<i class="ace-icon fa fa-asterisk smaller-80 middle"
+											data-icon-hide="ace-icon fa fa-minus"
+											data-icon-show="ace-icon fa fa-plus"></i>&nbsp;${(lottery.title)!''}
+										</a>
+									</div>
+								</div>
+								</#if>
+								</#list>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+			<div id="faq-list-4"
+				class="panel-group accordion-style1 accordion-style2">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<a href="#faq-4-2" data-parent="#faq-list-4"
+							data-toggle="collapse" class="accordion-toggle <#if lotteryType?? && lotteryType == 5>  <#else> collapsed </#if>"> <i
+							class="pull-right ace-icon fa <#if lotteryType?? && lotteryType == 5> fa-chevron-down <#else> fa-chevron-left </#if>"
+							data-icon-hide="ace-icon fa fa-chevron-down"
+							data-icon-show="ace-icon fa fa-chevron-left"></i> 砸金蛋
+						</a>
+					</div>
+
+					<div class="panel-collapse collapse <#if lotteryType?? && lotteryType == 5> in </#if>" id="faq-4-2" <#if lotteryType?? && lotteryType == 5> style="" <#else> style="height: 0px;" </#if>>
+						<div class="panel-body">
+							<div id="faq-list-nested-4"
+								class="panel-group accordion-style1 accordion-style2">
+								<#list listLottery as lottery >
+								<#if lottery.type == 5>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<a href="" onclick="selectActivity('${(activityUrl)}/GoldenEgg?businessid=${(lottery.businessid)!''}&id=${(lottery.id)!''}')" data-dismiss="modal"  class="accordion-toggle collapsed <#if lotteryId?? && lotteryId==lottery.id > green </#if>">
+											<i class="ace-icon fa fa-asterisk smaller-80 middle"
+											data-icon-hide="ace-icon fa fa-minus"
+											data-icon-show="ace-icon fa fa-plus"></i>&nbsp;${(lottery.title)!''}
+										</a>
+									</div>
+								</div>
+								</#if>
+								</#list>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+			
+			<div id="faq-list-5"
+				class="panel-group accordion-style1 accordion-style2">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<a href="#faq-5-2" data-parent="#faq-list-5"
+							data-toggle="collapse" class="accordion-toggle <#if lotteryType?? && lotteryType == 4>  <#else> collapsed </#if>"> <i
+							class="pull-right ace-icon fa <#if lotteryType?? && lotteryType == 4> fa-chevron-down <#else> fa-chevron-left </#if>"
+							data-icon-hide="ace-icon fa fa-chevron-down"
+							data-icon-show="ace-icon fa fa-chevron-left"></i>幸运水果机
+						</a>
+					</div>
+
+					<div class="panel-collapse collapse <#if lotteryType?? && lotteryType == 4> in </#if>" id="faq-5-2" <#if lotteryType?? && lotteryType == 4> style="" <#else> style="height: 0px;" </#if>>
+						<div class="panel-body">
+							<div id="faq-list-nested-5"
+								class="panel-group accordion-style1 accordion-style2">
+								<#list listLottery as lottery >
+								<#if lottery.type == 4>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<a href="" onclick="selectActivity('${(activityUrl)}/LuckyFruit?businessid=${(lottery.businessid)!''}&id=${(lottery.id)!''}')" data-dismiss="modal"  class="accordion-toggle collapsed <#if lotteryId?? && lotteryId==lottery.id > green </#if>">
+											<i class="ace-icon fa fa-asterisk smaller-80 middle"
+											data-icon-hide="ace-icon fa fa-minus"
+											data-icon-show="ace-icon fa fa-plus"></i>&nbsp;${(lottery.title)!''}
+										</a>
+									</div>
+								</div>
+								</#if>
+								</#list>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+			
+		</div>
+
+
+
+	</div>
+
+</div>
+<script type="text/javascript">
+	function selectActivity(url){
+		
+		$("input[name='siteclassify.url']").val(url);
+	}
+</script>

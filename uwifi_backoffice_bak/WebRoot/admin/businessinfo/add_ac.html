@@ -1,0 +1,216 @@
+<#if busCount &gt; 0 >
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">添加新路由</h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+	
+	<div class="col-xs-12">
+		<form class="form-horizontal" id="add-ac-from" role="form" >
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">路由器编号</label>
+					<div class="col-sm-8">
+						<input type="text" id="acNameId" name="acinfo.acid"
+							value="" placeholder="请输入路由器编号" class="form-control input-large">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">需要绑定的店铺</label>
+					<div class="col-sm-8">
+						<select class="form-control input-large no-padding-right" name="acinfo.businessid">
+								<option value="">--请选择店铺--</option> 
+								<#list businessinfoList as x>
+								<option value="${(x.id!'')}">${(x.busname!"")}</option>
+								</#list>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">路由器品牌</label>
+					<div class="col-sm-8">
+						<select class="form-control input-large no-padding-right" id="acbrand" name="acinfo.acbrandid"
+								onchange="getActypeinfo()">
+									<option value="">--请选择品牌--</option> <#list acbrandList as x>
+									<option value="${(x.id!'')}">${(x.acbrandname!"")}</option>
+									</#list>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">路由器型号</label>
+					<div class="col-sm-8">
+						<select class="form-control input-large no-padding-right" id="actypeinfo" name="acinfo.actypeid">
+								<option value="">--请选择型号--</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right">WiFi信号名称</label>
+					<div class="col-sm-8">
+						<input type="text" name="acinfo.eqptssid"
+							value="" placeholder="请输入WiFi信号名称" class="form-control input-large">
+					</div>
+				</div>
+	</form>
+	</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button data-dismiss="modal" class="btn btn-sm pull-left">
+		<i class="ace-icon fa fa-times"></i> 取消
+	</button>
+	<button type="button" class="btn btn-sm btn-warning" id="clear_btn"><i class="ace-icon fa fa-undo"></i>重置</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button onclick="form_submit();return false"
+		class="btn btn-sm btn-primary">
+		<i class="ace-icon fa fa-check"></i> 保存
+	</button>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#add-ac-from').bootstrapValidator({
+			message: '输入不正确',
+			feedbackIcons: {
+	            valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields: {
+	        	'acinfo.acid': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入路由器编号!'
+	                    },
+	                    stringLength: {
+	                        min: 1,
+	                        max: 30,
+	                        message: '输入长度不能超过30个字符'
+	                    },
+	                    regexp: {
+	                        regexp: /^[a-zA-Z0-9]+$/,
+	                        message: '路由器编号只能是数字和字母的组合'
+	                    },
+	                    remote: {
+	                        url: 'acinfo/checkName',
+	                        message: '该路由器编号已经存在！'
+	                    }
+	                }
+	            },
+	            'acinfo.businessid': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请选择需要绑定的店铺!'
+	                    }
+	                }
+	            },
+	            'acinfo.acbrandid': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请选择品牌!'
+	                    }
+	                }
+	            },
+	            'acinfo.actypeid': {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请选择型号!'
+	                    }
+	                }
+	            },
+	            'acinfo.eqptssid': {
+	                validators: {
+	                    stringLength: {
+	                        min: 1,
+	                        max: 30,
+	                        message: '输入长度不能超过30个字符'
+	                    }
+	                }
+	            }
+	        }
+		});
+		
+		$("#clear_btn").click(function() {
+			$('#add-ac-from').data('bootstrapValidator').resetForm(true);
+			$('#actypeinfo').empty();
+			$('#actypeinfo').append('<option value="">--请选择型号--</option>');
+			$('#actypeinfo option:eq(0)').attr('selected','selected')
+			
+		});
+	});
+	function form_submit(){
+		var form = $("#modal form");
+		form.bootstrapValidator('validate');
+		var bv = form.data('bootstrapValidator');
+		
+		if(bv.$invalidFields.size() == 0) {
+			
+			var queryString = form.formSerialize();
+			$.post(
+					"acinfo/addAcinfo",
+					queryString,
+					function(data) {
+						if(data.status == "1"){
+							window.location.href="${CPATH}/businessinfo/";
+						}else{
+							$("#modal .modal-body .alert").remove();
+							$("#modal .modal-body").prepend('<div class="alert alert-block alert-danger"><button data-dismiss="alert" class="close" type="button"><i class="ace-icon fa fa-times"></i></button>'+data.msg+'</div>');
+							$("#acNameId")[0].style.color = "#D16E6C";
+							$("#acNameId").focus(function(){
+					            $(this)[0].style.color = "#7BA065";
+					        });
+						}
+					},
+				"json"
+			);
+		}
+	}
+	
+	function getActypeinfo() {
+		var acbrandId = $('#acbrand').val();
+		$('#actypeinfo').empty();
+		var actypeinfo = $('#actypeinfo');
+		$('#actypeinfo').append('<option>--请选择型号--</option>');
+		$.ajax({
+			type : "post",
+			url : "acinfo/getActypeinfoList",
+			data : {
+				"acbrandId" : acbrandId
+			},
+			dataType : "json",
+			success : function(data) {
+
+				$.each(data, function(n, data) {
+					actypeinfo.append('<option value="'+data.id+'">'
+							+ data.typename + '</option>');
+					
+
+				});
+			}
+		});
+	}
+</script>
+<#else>
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">添加新路由</h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-xs-12 align-center">
+			<p class="font20 bolder well lighter red">您还没有创建店铺，请先完成店铺创建</p>
+			
+			<div class="modal-footer">
+				<a class="btn btn-sm btn-success" href="businessinfo">
+					<i class="ace-icon fa fa-building"></i> 添加店铺
+				</a>
+				<button data-dismiss="modal" class="btn btn-sm">
+					<i class="ace-icon fa fa-times"></i> 取消
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+</#if>

@@ -1,0 +1,47 @@
+<link rel="stylesheet" type="text/css" href="resources/elastislide/css/demo.css" />
+<link rel="stylesheet" type="text/css" href="resources/elastislide/css/elastislide.css" />
+<link rel="stylesheet" type="text/css" href="resources/elastislide/css/custom.css" />
+<script src="resources/js/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript"  src="resources/elastislide/js/modernizr.custom.17475.js"></script>
+<script type="text/javascript" src="resources/elastislide/js/jquerypp.custom.js"></script>
+<script type="text/javascript" src="resources/elastislide/js/jquery.elastislide.js"></script>
+<style type="text/css">
+<!--
+	.modal-dialog {
+    width:70%;
+	}
+	.modal-header{
+		height: 60px;
+	}
+}
+-->
+</style>		
+<div class="modal-header">
+	<button data-dismiss="modal" class="close" type="button">×</button>
+	<h4 class="blue bigger">分类页模板</h4>
+</div>
+
+<div class="modal-body">
+	<div class="container demo-1">
+
+            <div class="main">
+
+				<!-- Elastislide Carousel -->
+				<ul id="carouselclassify" class="elastislide-list">
+					<li><a href="" onclick="classifyModule(127)" data-dismiss="modal" ><img src="resources/images/module/fenlei1.png" alt="image01" /></a></li>
+				</ul>
+			</div>
+		</div>
+		
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#carouselclassify').elastislide();
+	});
+	function classifyModule(id){
+		$("#tpidStr").val("已选择模板 "+id);
+		$("input[name='siteclassify.tpid']").val(id);
+		
+		
+	}
+</script>
